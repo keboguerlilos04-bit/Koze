@@ -233,24 +233,31 @@ const SettingsScreen = () => {
     },
   ];
 
-  const supportList: GenericListType[] = [
-    {
+  const isChatWidgetConfigured =
+    !!process.env.EXPO_PUBLIC_CHATWOOT_WEBSITE_TOKEN && !!process.env.EXPO_PUBLIC_CHATWOOT_BASE_URL;
+
+  // Koze: only show support items that are configured in .env.
+  const supportList: GenericListType[] = [];
+  if (HELP_URL) {
+    supportList.push({
       hasChevron: true,
       title: i18n.t('SETTINGS.READ_DOCS'),
       icon: <SwitchIcon />,
       subtitle: '',
       subtitleType: 'light',
       onPressListItem: openHelpCenter,
-    },
-    {
+    });
+  }
+  if (isChatWidgetConfigured) {
+    supportList.push({
       hasChevron: true,
       title: i18n.t('SETTINGS.CHAT_WITH_US'),
       icon: <ChatwootIcon />,
       subtitle: '',
       subtitleType: 'light',
       onPressListItem: () => toggleWidget(true),
-    },
-  ];
+    });
+  }
 
   return (
     <SafeAreaView style={tailwind.style('flex-1 bg-white font-inter-normal-20')}>
@@ -286,9 +293,11 @@ const SettingsScreen = () => {
         <Animated.View style={tailwind.style('pt-6')}>
           <SettingsList sectionTitle={i18n.t('SETTINGS.PREFERENCES')} list={preferencesList} />
         </Animated.View>
-        <Animated.View style={tailwind.style('pt-6')}>
-          <SettingsList sectionTitle={i18n.t('SETTINGS.SUPPORT')} list={supportList} />
-        </Animated.View>
+        {supportList.length > 0 && (
+          <Animated.View style={tailwind.style('pt-6')}>
+            <SettingsList sectionTitle={i18n.t('SETTINGS.SUPPORT')} list={supportList} />
+          </Animated.View>
+        )}
         <Animated.View style={tailwind.style('pt-6 mx-4')}>
           <Button
             variant="secondary"
@@ -334,9 +343,7 @@ const SettingsScreen = () => {
         <BottomSheetHeader headerText={i18n.t('SETTINGS.DEBUG_ACTIONS')} />
         <DebugActions />
       </Sheet>
-      {!!process.env.EXPO_PUBLIC_CHATWOOT_WEBSITE_TOKEN &&
-        !!process.env.EXPO_PUBLIC_CHATWOOT_BASE_URL &&
-        !!showWidget && (
+      {isChatWidgetConfigured && !!showWidget && (
           <ChatWootWidget
             websiteToken={process.env.EXPO_PUBLIC_CHATWOOT_WEBSITE_TOKEN}
             locale="en"

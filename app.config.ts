@@ -12,7 +12,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     orientation: 'portrait',
     icon: './assets/icon.png',
     userInterfaceStyle: 'light',
-    scheme: 'chatwootapp',
+    scheme: 'kozeapp',
     ios: {
       supportsTablet: true,
       bundleIdentifier: 'com.koze.app',
@@ -60,7 +60,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
           action: 'VIEW',
           data: [
             {
-              scheme: 'chatwootapp',
+              scheme: 'kozeapp',
             },
           ],
           category: ['BROWSABLE', 'DEFAULT'],
