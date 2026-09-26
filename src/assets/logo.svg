@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 600" width="100%" height="100%">
+  <defs>
+    <!-- Gradyan vèt-ble pou kad la -->
+    <linearGradient id="frameGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3A9BB0"/>
+      <stop offset="100%" stop-color="#1E4D58"/>
+    </linearGradient>
+
+    <!-- Gradyan ble pou fasèt K yo -->
+    <linearGradient id="kLight" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6ED4E8"/>
+      <stop offset="100%" stop-color="#3FA8C0"/>
+    </linearGradient>
+    
+    <linearGradient id="kMid" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#318CA3"/>
+      <stop offset="100%" stop-color="#226476"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Kad kare ak kwen awondi -->
+  <rect x="76" y="30" width="360" height="360" rx="65" fill="none" stroke="url(#frameGrad)" stroke-width="26"/>
+
+  <!-- Lit K fòme ak plizyè fasèt (Origami Style) -->
+  <g transform="translate(156, 90)">
+    <!-- Trè vètikal gòch -->
+    <path d="M 0 0 L 32 0 L 32 240 L 0 240 Z" fill="url(#kMid)"/>
+    <!-- Diagonal anwo -->
+    <polygon points="28,120 120,20 160,20 60,120" fill="url(#kLight)"/>
+    <!-- Diagonal anba -->
+    <polygon points="28,120 60,120 160,220 120,220" fill="url(#kMid)"/>
+    <!-- Ombrag entèmedyè -->
+    <polygon points="28,120 85,70 60,120" fill="#226476" opacity="0.6"/>
+  </g>
+
+  <!-- Tèks Koze -->
+  <text x="256" y="485" 
+        font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" 
+        font-size="95" 
+        font-weight="500" 
+        fill="#132742" 
+        text-anchor="middle">Koze</text>
+</svg>
