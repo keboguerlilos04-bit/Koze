@@ -69,10 +69,12 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     },
     extra: {
       eas: {
-        projectId: process.env.EXPO_PUBLIC_PROJECT_ID,
+        // Koze project on expo.dev.
+        projectId: process.env.EXPO_PUBLIC_PROJECT_ID || 'e702037f-17dc-4b50-9f72-9ceef0e1bd2c',
         storybookEnabled: process.env.EXPO_STORYBOOK_ENABLED,
       },
     },
+    owner: 'keboguerlilos04s-team',
     plugins: [
       'expo-font',
       'expo-image',
