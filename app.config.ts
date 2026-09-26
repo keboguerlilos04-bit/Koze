@@ -100,8 +100,11 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       ],
       'expo-web-browser',
       '@react-native-community/datetimepicker',
-      '@react-native-firebase/app',
-      '@react-native-firebase/messaging',
+      // Koze: the Firebase plugins fail the build without google-services.json,
+      // so push notifications are only wired in once that file is configured.
+      ...(process.env.EXPO_PUBLIC_ANDROID_GOOGLE_SERVICES_FILE
+        ? ['@react-native-firebase/app', '@react-native-firebase/messaging']
+        : []),
       [
         'expo-build-properties',
         {

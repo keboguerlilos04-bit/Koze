@@ -6,6 +6,7 @@ import {
   onNotificationOpenedApp,
   setBackgroundMessageHandler,
 } from '@react-native-firebase/messaging';
+import { getApps } from '@react-native-firebase/app';
 import { getStateFromPath } from '@react-navigation/native';
 import { KeyboardProvider } from 'react-native-keyboard-controller';
 import { useFonts } from 'expo-font';
@@ -34,9 +35,15 @@ import Inter50024 from '@/assets/fonts/Inter-500-24.ttf';
 import Inter58024 from '@/assets/fonts/Inter-580-24.ttf';
 import Inter60020 from '@/assets/fonts/Inter-600-20.ttf';
 
-setBackgroundMessageHandler(getMessaging(), async remoteMessage => {
-  console.log('Message handled in the background!', remoteMessage);
-});
+// Koze: Firebase only initialises when google-services.json / GoogleService-Info.plist
+// are configured. Without them every messaging call throws and the app crashes on launch.
+const isFirebaseConfigured = getApps().length > 0;
+
+if (isFirebaseConfigured) {
+  setBackgroundMessageHandler(getMessaging(), async remoteMessage => {
+    console.log('Message handled in the background!', remoteMessage);
+  });
+}
 
 export const AppNavigationContainer = () => {
   const [fontsLoaded] = useFonts({
@@ -137,7 +144,9 @@ export const AppNavigationContainer = () => {
       }
 
       // getInitialNotification: When the application is opened from a quit state.
-      const message = await getInitialNotification(getMessaging());
+      const message = isFirebaseConfigured
+        ? await getInitialNotification(getMessaging())
+        : null;
       if (message) {
         const notification = findNotificationFromFCM({ message });
         if (notification) {
@@ -171,23 +180,25 @@ export const AppNavigationContainer = () => {
       const subscription = Linking.addEventListener('url', onReceiveURL);
 
       //onNotificationOpenedApp: When the application is running, but in the background.
-      const unsubscribeNotification = onNotificationOpenedApp(getMessaging(), message => {
-        if (message) {
-          const notification = findNotificationFromFCM({ message });
-          if (notification) {
-            const camelCaseNotification = transformNotification(notification);
+      const unsubscribeNotification = isFirebaseConfigured
+        ? onNotificationOpenedApp(getMessaging(), message => {
+            if (message) {
+              const notification = findNotificationFromFCM({ message });
+              if (notification) {
+                const camelCaseNotification = transformNotification(notification);
 
-            const conversationLink = findConversationLinkFromPush({
-              notification: camelCaseNotification,
-              installationUrl,
-              currentAccountId,
-            });
-            if (conversationLink) {
-              listener(conversationLink);
+                const conversationLink = findConversationLinkFromPush({
+                  notification: camelCaseNotification,
+                  installationUrl,
+                  currentAccountId,
+                });
+                if (conversationLink) {
+                  listener(conversationLink);
+                }
+              }
             }
-          }
-        }
-      });
+          })
+        : () => {};
 
       return () => {
         subscription.remove();

@@ -8,6 +8,16 @@
       "developmentClient": true,
       "distribution": "internal"
     },
+    // Installable APK for testing on a phone.
+    "preview": {
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk"
+      },
+      "env": {
+        "SENTRY_DISABLE_AUTO_UPLOAD": "true"
+      }
+    },
     "production": {
       "autoIncrement": true
     }
