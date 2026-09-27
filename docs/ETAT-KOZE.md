@@ -41,11 +41,11 @@ Un nouvel inscrit devient administrateur de son entreprise. Il peut inviter son 
 
 ## Ce qu'elle ne peut pas encore faire
 
-Le blocage le plus urgent : un nouvel inscrit ne peut plus se reconnecter après une déconnexion, car le serveur exige la confirmation de l'e-mail et ne peut pas encore envoyer d'e-mails.
+En attendant SMTP, les nouveaux comptes sont confirmés automatiquement : un inscrit peut se reconnecter, mais l'adresse e-mail n'est pas vérifiée.
 
 | Limite | Conséquence | Solution |
 | --- | --- | --- |
-| Pas de SMTP | Pas d'e-mail de confirmation ni de réinitialisation du mot de passe ; un inscrit déconnecté est bloqué | Configurer Gmail (mot de passe d'application) ou Brevo |
+| Pas de SMTP | Pas d'e-mail de réinitialisation du mot de passe ni d'invitation ; e-mails non vérifiés (confirmation automatique temporaire) | Configurer Brevo ; la confirmation automatique s'arrête d'elle-même |
 | Serveur sur un PC via ngrok | L'application ne marche que si le PC, Docker et ngrok sont allumés ; connexion instable | Héberger le serveur (VPS) avec un nom de domaine |
 | Pas de Firebase | Aucune notification push | Créer l'app Android `com.koze.app` dans Firebase et fournir `google-services.json` |
 | Android seulement | Aucune version iPhone | Compte Apple Developer (99 $/an) et build iOS |
@@ -80,7 +80,7 @@ Expo EAS compile l'APK dans le cloud.
 
 ## Prochaines étapes
 
-1. **Configurer SMTP** (Gmail avec mot de passe d'application, ou Brevo).
+1. **Configurer SMTP avec Brevo** (reporté ; confirmation automatique en attendant).
 2. **Installer le nouvel APK** et tester : inscription, déconnexion, reconnexion, messages.
 3. **Créer une boîte de réception de test** (widget de site web).
 4. **Mettre le français par défaut**, si les clients sont francophones.

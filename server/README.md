@@ -28,8 +28,9 @@ docker compose exec rails bundle exec rails runner \
   'InstallationConfig.find_by(name: "ENABLE_ACCOUNT_SIGNUP").update!(value: "api_only"); GlobalConfig.clear_cache'
 ```
 
-New users must confirm their email before they can sign in again, so SMTP must be
-configured in `.env`.
+New users must confirm their email before they can sign in again. Until SMTP is
+configured in `.env` (`SMTP_ADDRESS` blank), `koze_overrides.rb` confirms new users
+automatically; setting `SMTP_ADDRESS` turns that off.
 
 `koze_overrides.rb` is mounted as a Rails initializer. It keeps the company name
 typed at signup instead of renaming the account after the email domain's website

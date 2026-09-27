@@ -15,6 +15,23 @@ module KozeKeepSignupAccountName
   end
 end
 
+# TEMPORARY, until SMTP (Brevo) is configured: without email, a new user can never confirm
+# their address, so they could not sign in again after logging out. While SMTP_ADDRESS is
+# blank, new users are confirmed on creation. Setting SMTP_ADDRESS turns this off by itself.
+# Downside: anyone can sign up with an email address they do not own.
+module KozeAutoConfirmWithoutSmtp
+  def self.prepended(base)
+    base.before_create :koze_auto_confirm
+  end
+
+  private
+
+  def koze_auto_confirm
+    skip_confirmation! if ENV['SMTP_ADDRESS'].blank?
+  end
+end
+
 Rails.application.config.to_prepare do
   Account::BrandingEnrichmentJob.prepend(KozeKeepSignupAccountName)
+  User.prepend(KozeAutoConfirmWithoutSmtp) unless User < KozeAutoConfirmWithoutSmtp
 end
