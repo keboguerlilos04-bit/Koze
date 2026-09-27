@@ -39,11 +39,27 @@
     "FORGOT_PASSWORD": "Forgot your password?",
     "RESET_HERE": "Reset here",
     "NO_ACCOUNT": "Don't have an account?",
-    "CREATE_ACCOUNT": "Create new account",
+    "CREATE_ACCOUNT": "Create an account",
     "SETTINGS": "Settings",
     "CHANGE_LANGUAGE": "Change language",
     "TERMS": "Terms & Conditions",
     "CHANGE_URL": "Change URL"
+  },
+  "SIGNUP": {
+    "TITLE": "Create your Koze account",
+    "DESCRIPTION": "Set up your business in a minute. Your team inbox is ready as soon as you sign up.",
+    "FULL_NAME": "Full name",
+    "FULL_NAME_REQUIRED": "Full name is required",
+    "COMPANY_NAME": "Company name",
+    "COMPANY_NAME_REQUIRED": "Company name is required",
+    "EMAIL": "Email address",
+    "PASSWORD": "Password",
+    "PASSWORD_HINT": "At least 6 characters, with an uppercase letter, a lowercase letter, a number and a symbol.",
+    "PASSWORD_ERROR": "Use at least 6 characters, with an uppercase letter, a lowercase letter, a number and a symbol",
+    "SUBMIT": "Create my Koze account",
+    "SUBMIT_LOADING": "Creating your account...",
+    "HAVE_ACCOUNT": "Already have an account?",
+    "LOGIN": "Sign in"
   },
   "FORGOT_PASSWORD": {
     "EMAIL": "Please enter your email",

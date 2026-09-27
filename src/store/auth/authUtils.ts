@@ -27,3 +27,14 @@ export const handleApiError = (error: unknown, customErrorMsg?: string) => {
   showToast({ message });
   return { success: false, errors: [message] };
 };
+
+// Signup errors come back as { message } (e.g. 403 "Email already exists").
+export const handleSignupError = (error: unknown) => {
+  const { response } = error as AxiosError<{ message?: string }>;
+  const message = response?.data?.message || I18n.t('ERRORS.COMMON_ERROR');
+  // Without a response the API service has already shown the "could not connect" toast.
+  if (response) {
+    showToast({ message });
+  }
+  return { success: false, errors: [message] };
+};

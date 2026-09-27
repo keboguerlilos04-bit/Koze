@@ -39,6 +39,14 @@ export interface LoginApiResponse {
 export interface ResetPasswordPayload {
   email: string;
 }
+// Koze: self-service signup. Creates the user and their business account in one call.
+export interface SignupPayload {
+  user_full_name: string;
+  account_name: string;
+  email: string;
+  password: string;
+  locale?: string;
+}
 export interface ResetPasswordResponse {
   message: string;
 }

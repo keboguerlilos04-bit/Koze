@@ -35,11 +35,27 @@
     "FORGOT_PASSWORD": "Mot de passe oublié ?",
     "RESET_HERE": "Réinitialiser ici",
     "NO_ACCOUNT": "Vous n'avez pas de compte ?",
-    "CREATE_ACCOUNT": "Créer un nouveau compte",
+    "CREATE_ACCOUNT": "Créer un compte",
     "SETTINGS": "Paramètres",
     "CHANGE_LANGUAGE": "Modifier la langue",
     "TERMS": "Conditions Générales",
     "CHANGE_URL": "Modifier l'URL"
+  },
+  "SIGNUP": {
+    "TITLE": "Créez votre compte Koze",
+    "DESCRIPTION": "Configurez votre entreprise en une minute. Votre boîte de réception d'équipe est prête dès l'inscription.",
+    "FULL_NAME": "Nom complet",
+    "FULL_NAME_REQUIRED": "Le nom complet est requis",
+    "COMPANY_NAME": "Nom de l'entreprise",
+    "COMPANY_NAME_REQUIRED": "Le nom de l'entreprise est requis",
+    "EMAIL": "Adresse e-mail",
+    "PASSWORD": "Mot de passe",
+    "PASSWORD_HINT": "Au moins 6 caractères, avec une majuscule, une minuscule, un chiffre et un symbole.",
+    "PASSWORD_ERROR": "Utilisez au moins 6 caractères, avec une majuscule, une minuscule, un chiffre et un symbole",
+    "SUBMIT": "Créer mon compte Koze",
+    "SUBMIT_LOADING": "Création de votre compte...",
+    "HAVE_ACCOUNT": "Vous avez déjà un compte ?",
+    "LOGIN": "Se connecter"
   },
   "FORGOT_PASSWORD": {
     "EMAIL": "Veuillez saisir votre adresse de courriel",

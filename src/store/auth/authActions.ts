@@ -13,8 +13,9 @@ import type {
   SetActiveAccountPayload,
   SsoAuthPayload,
   SsoAuthResponse,
+  SignupPayload,
 } from './authTypes';
-import { handleApiError } from './authUtils';
+import { handleApiError, handleSignupError } from './authUtils';
 import I18n from '@/i18n';
 
 const createAuthThunk = <TResponse, TPayload>(
@@ -69,5 +70,17 @@ export const authActions = {
     'auth/loginWithSso',
     AuthService.loginWithSso,
     I18n.t('ERRORS.AUTH'),
+  ),
+
+  // On success the user is logged in right away, like a regular login.
+  signup: createAsyncThunk<LoginResponse, SignupPayload, { rejectValue: ApiErrorResponse }>(
+    'auth/signup',
+    async (payload, { rejectWithValue }) => {
+      try {
+        return await AuthService.signup(payload);
+      } catch (error) {
+        return rejectWithValue(handleSignupError(error));
+      }
+    },
   ),
 };

@@ -14,6 +14,7 @@ jest.mock('@/utils/toastUtils', () => ({
 }));
 
 jest.mock('@/services/APIService', () => ({
+  SIGNUP_ROUTE: 'api/v1/accounts',
   apiService: {
     get: jest.fn(),
     post: jest.fn(),
@@ -61,6 +62,35 @@ describe('AuthService', () => {
       await expect(AuthService.login(credentials)).rejects.toThrow(error);
     });
   });
+  describe('signup', () => {
+    const payload = {
+      user_full_name: 'Jean Pierre',
+      account_name: 'Boutik Jean',
+      email: 'jean@example.com',
+      password: 'Koze#2026',
+      locale: 'fr',
+    };
+
+    it('should create the account and return the user with auth headers', async () => {
+      (apiService.post as jest.Mock).mockResolvedValueOnce({
+        data: { data: mockUser },
+        headers: mockHeaders,
+      });
+
+      const result = await AuthService.signup(payload);
+
+      expect(apiService.post).toHaveBeenCalledWith('api/v1/accounts', payload);
+      expect(result).toEqual({ user: mockUser, headers: mockHeaders });
+    });
+
+    it('should throw error when signup fails', async () => {
+      const error = new Error('Email already exists');
+      (apiService.post as jest.Mock).mockRejectedValueOnce(error);
+
+      await expect(AuthService.signup(payload)).rejects.toThrow(error);
+    });
+  });
+
   describe('getProfile', () => {
     it('should make a GET request to profile endpoint', async () => {
       const mockResponse = { data: mockUser };

@@ -1,4 +1,4 @@
-import { apiService } from '@/services/APIService';
+import { apiService, SIGNUP_ROUTE } from '@/services/APIService';
 import type { User } from '@/types/User';
 import type {
   LoginPayload,
@@ -8,6 +8,7 @@ import type {
   MfaVerificationPayload,
   ResetPasswordPayload,
   ResetPasswordResponse,
+  SignupPayload,
   AvailabilityPayload,
   ProfileResponse,
   SetActiveAccountPayload,
@@ -54,6 +55,19 @@ export class AuthService {
     const response = await apiService.get<ProfileResponse>('profile');
     return response.data;
   }
+  // Needs ENABLE_ACCOUNT_SIGNUP=api_only on the server so it answers with auth headers.
+  static async signup(payload: SignupPayload): Promise<LoginResponse> {
+    const response = await apiService.post<{ data: User }>(SIGNUP_ROUTE, payload);
+    return {
+      user: response.data.data,
+      headers: {
+        'access-token': response.headers['access-token'],
+        uid: response.headers.uid,
+        client: response.headers.client,
+      },
+    };
+  }
+
   static async resetPassword(payload: ResetPasswordPayload): Promise<ResetPasswordResponse> {
     const response = await apiService.post<ResetPasswordResponse>('auth/password', payload);
     return response.data;

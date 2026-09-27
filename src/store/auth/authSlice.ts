@@ -190,6 +190,23 @@ export const authSlice = createSlice({
       .addCase(authActions.loginWithSso.rejected, (state, action) => {
         state.uiFlags.isLoggingIn = false;
         state.error = action.payload?.errors[0] ?? null;
+      })
+      // Koze signup: storing the user and headers logs in and shows the conversation list.
+      .addCase(authActions.signup.pending, state => {
+        state.uiFlags.isLoggingIn = true;
+        state.error = null;
+      })
+      .addCase(authActions.signup.fulfilled, (state, action) => {
+        state.user = action.payload.user;
+        state.headers = action.payload.headers;
+        state.uiFlags.isLoggingIn = false;
+        state.error = null;
+        state.mfaToken = null;
+        state.verificationChannel = null;
+      })
+      .addCase(authActions.signup.rejected, (state, action) => {
+        state.uiFlags.isLoggingIn = false;
+        state.error = action.payload?.errors[0] ?? null;
       });
   },
 });

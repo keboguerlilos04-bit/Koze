@@ -3,6 +3,7 @@ x-base: &base
   env_file: .env
   volumes:
     - storage_data:/app/storage
+    - ./koze_overrides.rb:/app/config/initializers/koze_overrides.rb:ro
 
 services:
   rails:

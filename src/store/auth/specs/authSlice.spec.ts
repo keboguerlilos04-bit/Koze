@@ -188,6 +188,37 @@ describe('Auth Slice', () => {
   });
 
   describe('auth async actions', () => {
+    it('should log the new user in when signup succeeds', () => {
+      const payload = {
+        user: mockUser,
+        headers: { 'access-token': 'token', uid: 'uid', client: 'client' },
+      };
+      const pending = authReducer(initialState, { type: authActions.signup.pending.type });
+      expect(pending.uiFlags.isLoggingIn).toBe(true);
+
+      const state = authReducer(pending, { type: authActions.signup.fulfilled.type, payload });
+
+      expect(state.user).toEqual(mockUser);
+      expect(state.headers).toEqual(payload.headers);
+      expect(state.uiFlags.isLoggingIn).toBe(false);
+      expect(state.error).toBeNull();
+    });
+
+    it('should keep the user logged out and store the error when signup fails', () => {
+      const action = {
+        type: authActions.signup.rejected.type,
+        payload: { success: false, errors: ['Email already exists'] },
+      };
+      const state = authReducer(
+        { ...initialState, uiFlags: { ...initialState.uiFlags, isLoggingIn: true } },
+        action,
+      );
+
+      expect(state.user).toBeNull();
+      expect(state.uiFlags.isLoggingIn).toBe(false);
+      expect(state.error).toBe('Email already exists');
+    });
+
     it('should set isLoggingIn flag when login is pending', () => {
       const action = { type: authActions.login.pending.type };
       const state = authReducer(initialState, action);
