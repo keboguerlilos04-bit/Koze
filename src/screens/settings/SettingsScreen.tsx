@@ -33,7 +33,14 @@ import { UserAvatar } from './components/UserAvatar';
 
 import { LANGUAGES } from '@/constants';
 import { useRefsContext } from '@/context';
-import { ChatwootIcon, NotificationIcon, SwitchIcon, TranslateIcon } from '@/svg-icons';
+import {
+  ChatwootIcon,
+  InboxFilterIcon,
+  NotificationIcon,
+  SwitchIcon,
+  TeamIcon,
+  TranslateIcon,
+} from '@/svg-icons';
 import { GenericListType } from '@/types';
 
 import { useHaptic, useTabBarHeight } from '@/utils';
@@ -43,6 +50,7 @@ import {
   selectCurrentUserAvailability,
   selectUser,
   selectAccounts,
+  selectIsAccountOwner,
 } from '@/store/auth/authSelectors';
 import { logout } from '@/store/auth/authSlice';
 import { authActions } from '@/store/auth/authActions';
@@ -233,6 +241,27 @@ const SettingsScreen = () => {
     },
   ];
 
+  // Koze: only the account owner manages agents and inboxes from the app.
+  const isAccountOwner = useAppSelector(selectIsAccountOwner);
+  const adminList: GenericListType[] = [
+    {
+      hasChevron: true,
+      title: i18n.t('ADMIN.AGENTS'),
+      icon: <TeamIcon />,
+      subtitle: '',
+      subtitleType: 'light',
+      onPressListItem: () => navigation.navigate('AdminAgents' as never),
+    },
+    {
+      hasChevron: true,
+      title: i18n.t('ADMIN.INBOXES'),
+      icon: <InboxFilterIcon />,
+      subtitle: '',
+      subtitleType: 'light',
+      onPressListItem: () => navigation.navigate('AdminInboxes' as never),
+    },
+  ];
+
   const isChatWidgetConfigured =
     !!process.env.EXPO_PUBLIC_CHATWOOT_WEBSITE_TOKEN && !!process.env.EXPO_PUBLIC_CHATWOOT_BASE_URL;
 
@@ -290,6 +319,11 @@ const SettingsScreen = () => {
             </Animated.Text>
           </Animated.View>
         </Animated.View>
+        {isAccountOwner && (
+          <Animated.View style={tailwind.style('pt-6')}>
+            <SettingsList sectionTitle={i18n.t('ADMIN.SECTION')} list={adminList} />
+          </Animated.View>
+        )}
         <Animated.View style={tailwind.style('pt-6')}>
           <SettingsList sectionTitle={i18n.t('SETTINGS.PREFERENCES')} list={preferencesList} />
         </Animated.View>
@@ -344,16 +378,16 @@ const SettingsScreen = () => {
         <DebugActions />
       </Sheet>
       {isChatWidgetConfigured && !!showWidget && (
-          <ChatWootWidget
-            websiteToken={process.env.EXPO_PUBLIC_CHATWOOT_WEBSITE_TOKEN}
-            locale="en"
-            baseUrl={process.env.EXPO_PUBLIC_CHATWOOT_BASE_URL}
-            closeModal={() => toggleWidget(false)}
-            isModalVisible={showWidget}
-            user={userDetails}
-            customAttributes={customAttributes}
-          />
-        )}
+        <ChatWootWidget
+          websiteToken={process.env.EXPO_PUBLIC_CHATWOOT_WEBSITE_TOKEN}
+          locale="en"
+          baseUrl={process.env.EXPO_PUBLIC_CHATWOOT_BASE_URL}
+          closeModal={() => toggleWidget(false)}
+          isModalVisible={showWidget}
+          user={userDetails}
+          customAttributes={customAttributes}
+        />
+      )}
     </SafeAreaView>
   );
 };

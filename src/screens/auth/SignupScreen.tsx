@@ -13,7 +13,7 @@ import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
 
-import { EMAIL_REGEX } from '@/constants';
+import { EMAIL_REGEX, PASSWORD_REGEX } from '@/constants';
 import { EyeIcon, EyeSlash } from '@/svg-icons';
 import { tailwind } from '@/theme';
 import i18n from '@/i18n';
@@ -30,10 +30,6 @@ type FormData = {
   email: string;
   password: string;
 };
-
-// Mirrors the server's devise-secure_password rules: 6+ characters with an uppercase letter,
-// a lowercase letter, a number and a special character.
-const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{6,}$/;
 
 const inputStyle = tailwind.style(
   'text-base font-inter-normal-20 tracking-[0.24px] leading-[20px] android:leading-[18px]',

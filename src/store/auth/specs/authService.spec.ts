@@ -79,7 +79,9 @@ describe('AuthService', () => {
 
       const result = await AuthService.signup(payload);
 
-      expect(apiService.post).toHaveBeenCalledWith('api/v1/accounts', payload);
+      expect(apiService.post).toHaveBeenCalledWith('api/v1/accounts', payload, {
+        skipErrorToast: true,
+      });
       expect(result).toEqual({ user: mockUser, headers: mockHeaders });
     });
 

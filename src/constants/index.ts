@@ -258,6 +258,10 @@ export const URL_WITHOUT_HTTP_REGEX =
 export const EMAIL_REGEX =
   /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
+// Koze: mirrors the server's devise-secure_password rules: 6+ characters with an uppercase
+// letter, a lowercase letter, a number and a special character.
+export const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{6,}$/;
+
 export const TEXT_MAX_WIDTH = 300;
 
 export const MESSAGE_MAX_LENGTH = {

@@ -57,7 +57,9 @@ export class AuthService {
   }
   // Needs ENABLE_ACCOUNT_SIGNUP=api_only on the server so it answers with auth headers.
   static async signup(payload: SignupPayload): Promise<LoginResponse> {
-    const response = await apiService.post<{ data: User }>(SIGNUP_ROUTE, payload);
+    const response = await apiService.post<{ data: User }>(SIGNUP_ROUTE, payload, {
+      skipErrorToast: true,
+    });
     return {
       user: response.data.data,
       headers: {

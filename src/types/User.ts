@@ -13,6 +13,8 @@ export type User = {
   avatar_url: string;
   available_name: string;
   role: UserRole;
+  // Who invited the user to the active account; null for the owner who created it at signup.
+  inviter_id?: number | null;
   identifier_hash: string;
   availability: string;
   thumbnail: string;

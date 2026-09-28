@@ -50,6 +50,18 @@ export const selectCurrentUserAccount = createSelector(selectAuth, auth => {
   return currentAccount;
 });
 
+// Koze: the account owner is the administrator who created it at signup (nobody invited
+// them). Only they see the in-app administration screens. `role` and `inviter_id` describe
+// the server-side active account, so the local current account must agree as well.
+export const selectIsAccountOwner = createSelector(
+  selectAuth,
+  selectCurrentUserAccount,
+  (auth, currentAccount) =>
+    auth.user?.role === 'administrator' &&
+    auth.user.inviter_id === null &&
+    currentAccount?.role === 'administrator',
+);
+
 export const selectMfaToken = createSelector(selectAuth, auth => auth.mfaToken);
 
 export const selectIsMfaRequired = createSelector(selectAuth, auth => auth.mfaToken !== null);

@@ -12,6 +12,8 @@ L'application sait déjà gérer les conversations d'une entreprise. Pour foncti
 
 | Date | Travail | Détail |
 | --- | --- | --- |
+| 27 sept. | Administration dans l'application | Le propriétaire ajoute ses agents (mot de passe temporaire), crée ses boîtes Telegram et WhatsApp et choisit qui y répond ; invisible pour les agents |
+| 27 sept. | Confirmation automatique | En attendant SMTP, les nouveaux comptes sont confirmés automatiquement |
 | 27 sept. | Inscription en libre-service | Écran « Créer un compte » (nom complet, entreprise, e-mail, mot de passe) ; crée l'utilisateur et le compte de l'entreprise, puis connecte automatiquement |
 | 27 sept. | Correctif serveur | Le serveur renommait l'entreprise d'après le site du domaine e-mail (ex. « Gmail ») ; le nom saisi est maintenant conservé |
 | 27 sept. | Messages d'erreur clairs | L'inscription affiche le vrai message du serveur (e-mail déjà utilisé, mot de passe trop faible) |
@@ -36,8 +38,9 @@ L'inscription a été testée contre le vrai serveur. Les autres fonctions vienn
 | Contacts | Fiche contact, historique de ses conversations | Non |
 | Temps réel | Nouveaux messages et indicateur « en train d'écrire » par WebSocket | Non |
 | Compte utilisateur | Statut de disponibilité, changement de langue, plusieurs comptes d'entreprise | Non |
+| Administration (propriétaire seulement) | Ajouter un agent avec un mot de passe temporaire, retirer un agent, créer une boîte Telegram ou WhatsApp, choisir les agents de chaque boîte | Serveur : oui ; téléphone : non |
 
-Un nouvel inscrit devient administrateur de son entreprise. Il peut inviter son équipe et créer ses boîtes de réception, mais seulement depuis le site web, pas depuis l'application.
+Un nouvel inscrit devient administrateur et propriétaire de son entreprise. Lui seul voit la section « Administration » dans les Réglages ; les personnes qu'il ajoute ne la voient pas.
 
 ## Ce qu'elle ne peut pas encore faire
 
@@ -51,7 +54,7 @@ En attendant SMTP, les nouveaux comptes sont confirmés automatiquement : un ins
 | Android seulement | Aucune version iPhone | Compte Apple Developer (99 $/an) et build iOS |
 | Pas sur le Play Store | Installation manuelle de l'APK (« sources inconnues ») | Compte Google Play (25 $), build `production` (.aab) |
 | Anglais par défaut | Les écrans affichent « Create an account » tant que l'utilisateur n'a pas choisi le français | Mettre le français par défaut |
-| Configuration dans l'application | Boîtes de réception, agents et réglages se gèrent uniquement sur le site web | Développer ces écrans ou envoyer les clients vers le web |
+| Configuration limitée dans l'application | Site web, e-mail, Facebook et Instagram, équipes, étiquettes et réponses prédéfinies se configurent uniquement sur le site web | Ajouter d'autres écrans selon les besoins |
 | Pas de facturation | Aucun abonnement ni paiement pour les clients | À concevoir |
 | Inscription ouverte | N'importe qui peut créer un compte ; pas de captcha | Ajouter hCaptcha ou une validation manuelle |
 

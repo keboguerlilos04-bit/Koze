@@ -12,8 +12,15 @@ import { getStore } from '@/store/storeAccessor';
 import I18n from '@/i18n';
 import { showToast } from '@/utils/toastUtils';
 
-// Koze: account signup. Its errors (email taken, weak password...) carry a server message
-// that the signup screen shows itself, so the generic "could not connect" toast is skipped.
+// Koze: requests made with { skipErrorToast: true } show the server's own error message
+// (email taken, weak password...) themselves, so the generic "could not connect" toast is
+// skipped whenever the server did answer.
+declare module 'axios' {
+  interface AxiosRequestConfig {
+    skipErrorToast?: boolean;
+  }
+}
+
 export const SIGNUP_ROUTE = 'api/v1/accounts';
 
 const nonAccountRoutes = [
@@ -126,7 +133,7 @@ class APIService {
         if (error.response?.status === 401) {
           const store = getStore();
           store.dispatch({ type: 'auth/logout' });
-        } else if (!(error.config?.url === SIGNUP_ROUTE && error.response)) {
+        } else if (!(error.config?.skipErrorToast && error.response)) {
           showToast({ message: I18n.t('ERRORS.COMMON_ERROR') });
         }
         return Promise.reject(error);
@@ -143,6 +150,10 @@ class APIService {
 
   public async put<T, D = unknown>(url: string, data?: D, config?: AxiosRequestConfig) {
     return this.api.put<T>(url, data, config);
+  }
+
+  public async patch<T, D = unknown>(url: string, data?: D, config?: AxiosRequestConfig) {
+    return this.api.patch<T>(url, data, config);
   }
 
   public async delete<T>(url: string, config?: AxiosRequestConfig) {

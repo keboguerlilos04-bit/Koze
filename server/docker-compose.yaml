@@ -4,6 +4,7 @@ x-base: &base
   volumes:
     - storage_data:/app/storage
     - ./koze_overrides.rb:/app/config/initializers/koze_overrides.rb:ro
+    - ./koze_agents_controller.rb:/app/app/controllers/api/v1/accounts/koze_agents_controller.rb:ro
 
 services:
   rails:

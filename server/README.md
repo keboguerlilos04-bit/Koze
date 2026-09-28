@@ -35,3 +35,10 @@ automatically; setting `SMTP_ADDRESS` turns that off.
 `koze_overrides.rb` is mounted as a Rails initializer. It keeps the company name
 typed at signup instead of renaming the account after the email domain's website
 (e.g. "Gmail").
+
+## Agents added from the app
+
+`koze_agents_controller.rb` is mounted as a controller and adds
+`POST /api/v1/accounts/:account_id/koze_agents { name, email, password }`. Only the
+account owner (the administrator nobody invited) may call it. It creates the agent
+with the temporary password the owner chose, so no invitation email is needed.

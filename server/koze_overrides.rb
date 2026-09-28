@@ -31,6 +31,19 @@ module KozeAutoConfirmWithoutSmtp
   end
 end
 
+# Route for Api::V1::Accounts::KozeAgentsController (koze_agents_controller.rb).
+Rails.application.routes.prepend do
+  namespace :api, defaults: { format: 'json' } do
+    namespace :v1 do
+      resources :accounts, only: [] do
+        scope module: :accounts do
+          resources :koze_agents, only: [:create]
+        end
+      end
+    end
+  end
+end
+
 Rails.application.config.to_prepare do
   Account::BrandingEnrichmentJob.prepend(KozeKeepSignupAccountName)
   User.prepend(KozeAutoConfirmWithoutSmtp) unless User < KozeAutoConfirmWithoutSmtp
