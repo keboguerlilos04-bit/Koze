@@ -7,8 +7,12 @@ import type {
   AdminAgent,
   CreateAgentPayload,
   CreateAgentResponse,
+  TeamMember,
+  TeamResponse,
   TelegramInboxPayload,
+  UpdateMemberPayload,
   WhatsAppInboxPayload,
+  WorkSchedule,
 } from './adminTypes';
 
 // Koze: account administration for the owner. Callers show the server's own error message
@@ -24,6 +28,41 @@ export class AdminService {
   // Custom Koze endpoint: creates the agent with a temporary password chosen by the owner.
   static async createAgent(payload: CreateAgentPayload): Promise<CreateAgentResponse> {
     const response = await apiService.post<CreateAgentResponse>('koze_agents', payload, ownErrors);
+    return response.data;
+  }
+
+  // The whole team with live status, pause, working hours and the account limits.
+  static async team(): Promise<TeamResponse> {
+    const response = await apiService.get<TeamResponse>('koze_agents', ownErrors);
+    return response.data;
+  }
+
+  // The owner edits anyone's name, email, phone or password (their own included).
+  static async updateMember(memberId: number, payload: UpdateMemberPayload): Promise<TeamMember> {
+    const response = await apiService.patch<TeamMember>(
+      `koze_agents/${memberId}`,
+      payload,
+      ownErrors,
+    );
+    return response.data;
+  }
+
+  static async setPaused(memberId: number, paused: boolean): Promise<TeamMember> {
+    const response = await apiService.post<TeamMember>(
+      `koze_agents/${memberId}/${paused ? 'pause' : 'resume'}`,
+      {},
+      ownErrors,
+    );
+    return response.data;
+  }
+
+  // null removes the schedule: the agent can then work at any time.
+  static async setSchedule(memberId: number, schedule: WorkSchedule | null): Promise<TeamMember> {
+    const response = await apiService.put<TeamMember>(
+      `koze_agents/${memberId}/schedule`,
+      { schedule },
+      ownErrors,
+    );
     return response.data;
   }
 

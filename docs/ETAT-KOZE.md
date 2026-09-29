@@ -12,6 +12,8 @@ L'application sait déjà gérer les conversations d'une entreprise. Pour foncti
 
 | Date | Travail | Détail |
 | --- | --- | --- |
+| 30 sept. | Gestion de l'équipe | Pause d'un agent, horaires de travail, coordonnées et mot de passe modifiables par le propriétaire, pastille verte « en ligne » en temps réel, limites de 3 agents et 2 administrateurs |
+| 30 sept. | Réglages | Boîtes de réception et Rapports dans Réglages > Administration ; « Changer mon mot de passe » pour tous ; « Statut » traduit |
 | 29 sept. | Nouvelle navigation | 4 onglets (Conversations, Boîtes, Rapports pour les administrateurs, Réglages) ; notifications derrière une cloche ; en-tête compact avec le logo |
 | 29 sept. | Paiement MonCash (simulé) | 1 500 HTG par boîte et par mois ; numéro MonCash demandé à l'inscription ; le serveur refuse une boîte non payée |
 | 29 sept. | Nouvelle conversation WhatsApp | Bouton « + » flottant : numéro du client et modèle WhatsApp approuvé |

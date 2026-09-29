@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { Animated, Pressable, RefreshControl, ScrollView, StatusBar, View } from 'react-native';
+import { Animated, Pressable, RefreshControl, ScrollView, View } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -20,7 +20,11 @@ import {
 const PERIODS = [7, 30] as const;
 type Period = (typeof PERIODS)[number];
 
-const MetricCard = ({ label, value, previous }: {
+const MetricCard = ({
+  label,
+  value,
+  previous,
+}: {
   label: string;
   value: string;
   previous?: string;
@@ -40,7 +44,7 @@ const MetricCard = ({ label, value, previous }: {
   </KozeCard>
 );
 
-// Koze: account statistics for administrators (Chatwoot reports API).
+// Koze: Settings > Administration > Reports (Chatwoot reports API).
 const ReportsScreen = () => {
   const accountId = useAppSelector(selectCurrentUserAccountId);
   const tabBarHeight = useTabBarHeight();
@@ -76,21 +80,12 @@ const ReportsScreen = () => {
   };
 
   return (
-    <SafeAreaView edges={['top']} style={tailwind.style('flex-1 bg-koze-canvas')}>
-      <StatusBar
-        translucent
-        backgroundColor={tailwind.color('bg-koze-canvas')}
-        barStyle={'dark-content'}
-      />
-      <View
-        style={tailwind.style(
-          'flex-row items-center justify-between px-4 pt-1 pb-3 border-b-[1px] border-b-koze-line',
-        )}>
-        <Animated.Text
-          style={tailwind.style('text-[17px] leading-[20px] font-inter-580-24 text-koze-navy')}>
-          {i18n.t('REPORTS.TITLE')}
-        </Animated.Text>
-        <View style={tailwind.style('flex-row rounded-full bg-white border-[1.5px] border-koze-line p-0.5')}>
+    <SafeAreaView edges={['bottom']} style={tailwind.style('flex-1 bg-koze-canvas')}>
+      <View style={tailwind.style('flex-row items-center justify-end px-4 pt-1 pb-2')}>
+        <View
+          style={tailwind.style(
+            'flex-row rounded-full bg-white border-[1.5px] border-koze-line p-0.5',
+          )}>
           {PERIODS.map(days => (
             <Pressable
               key={days}
@@ -121,12 +116,16 @@ const ReportsScreen = () => {
         <ScrollView
           refreshControl={<RefreshControl refreshing={isRefreshing} onRefresh={refresh} />}
           contentContainerStyle={tailwind.style('px-4 pt-4 gap-3', `pb-[${tabBarHeight + 24}px]`)}>
-          <Animated.Text style={tailwind.style('text-sm font-inter-medium-24 text-koze-muted pl-1')}>
+          <Animated.Text
+            style={tailwind.style('text-sm font-inter-medium-24 text-koze-muted pl-1')}>
             {i18n.t('REPORTS.OPEN_NOW')}
           </Animated.Text>
           <View style={tailwind.style('flex-row gap-3')}>
             <MetricCard label={i18n.t('REPORTS.MINE')} value={String(open.mine_count)} />
-            <MetricCard label={i18n.t('REPORTS.UNASSIGNED')} value={String(open.unassigned_count)} />
+            <MetricCard
+              label={i18n.t('REPORTS.UNASSIGNED')}
+              value={String(open.unassigned_count)}
+            />
             <MetricCard label={i18n.t('REPORTS.ALL')} value={String(open.all_count)} />
           </View>
 

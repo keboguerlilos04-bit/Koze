@@ -12,7 +12,7 @@ import { TelegramFilledIcon, WhatsAppFilledIcon } from '@/svg-icons';
 import { showToast } from '@/utils/toastUtils';
 import { showAdminError } from '@/store/admin/adminService';
 import { BillingService, BillingSummary } from '@/store/billing/billingService';
-import type { InboxesStackParamList } from '@/navigation/stack/InboxesStack';
+import type { SettingsStackParamList } from '@/navigation/stack/SettingsStack';
 
 const formatHtg = (amount: number) => amount.toLocaleString('fr-FR');
 
@@ -49,7 +49,7 @@ const ReceiptRow = ({
 // Koze: adding an inbox costs 1,500 HTG per month, paid with MonCash. The server checks the
 // payment again when the inbox is created, so this screen is not the only guard.
 const MonCashPaywallScreen = () => {
-  const navigation = useNavigation<NativeStackNavigationProp<InboxesStackParamList>>();
+  const navigation = useNavigation<NativeStackNavigationProp<SettingsStackParamList>>();
   const [billing, setBilling] = useState<BillingSummary | null>(null);
   const [isPaying, setIsPaying] = useState(false);
   // Accounts created before signup asked for a MonCash number add it here.

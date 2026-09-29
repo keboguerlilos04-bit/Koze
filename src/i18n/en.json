@@ -66,6 +66,44 @@
     "LOGIN": "Sign in"
   },
   "ADMIN": {
+    "DAY_SUN": "Sunday",
+    "DAY_SAT": "Saturday",
+    "DAY_FRI": "Friday",
+    "DAY_THU": "Thursday",
+    "DAY_WED": "Wednesday",
+    "DAY_TUE": "Tuesday",
+    "DAY_MON": "Monday",
+    "REMOVE_FROM_ACCOUNT": "Remove from the account",
+    "TIME_ERROR": "Use HH:MM times, the end after the start",
+    "DAY_OFF": "Day off",
+    "SCHEDULE_SAVED": "Working hours saved",
+    "SAVE_SCHEDULE": "Save the hours",
+    "SCHEDULE_REMOVE": "Remove the schedule",
+    "SCHEDULE_ENABLE": "Set working hours",
+    "SCHEDULE_NONE": "No schedule: available at any time.",
+    "SCHEDULE_HINT": "Outside these hours the agent is offline: no new conversations and no replies.",
+    "SCHEDULE_SECTION": "Working hours",
+    "AGENT_RESUMED": "Agent active again",
+    "AGENT_PAUSED": "Agent paused",
+    "PAUSE_HINT": "A paused agent keeps their account but cannot use it until you resume them.",
+    "PAUSE_LABEL": "Pause this agent",
+    "ACCESS_SECTION": "Access",
+    "PASSWORD_CHANGED": "Password changed",
+    "SET_PASSWORD": "Change the password",
+    "NEW_PASSWORD": "New password",
+    "PASSWORD_SECTION": "Password",
+    "CONTACT_SAVED": "Details saved",
+    "SAVE_CONTACT": "Save the details",
+    "PHONE": "Phone number",
+    "CONTACT_SECTION": "Contact details",
+    "OUTSIDE_HOURS": "Outside working hours",
+    "PAUSED": "Paused",
+    "OFFLINE": "Offline",
+    "BUSY": "Busy",
+    "ONLINE": "Online",
+    "OWNER": "Owner",
+    "LIMIT_REACHED": "You have reached the limit of {{max}} agents.",
+    "TEAM_LIMITS": "{{agents}}/{{maxAgents}} agents · {{admins}}/{{maxAdmins}} administrators",
     "SECTION": "Administration",
     "AGENTS": "Agents",
     "INBOXES": "Inboxes",
@@ -113,6 +151,20 @@
     "SAVING": "Saving...",
     "SAVED": "Saved"
   },
+  "PROFILE": {
+    "SECTION": "My account",
+    "CHANGE_PASSWORD": "Change my password",
+    "CURRENT_PASSWORD": "Current password",
+    "NEW_PASSWORD": "New password",
+    "CONFIRM_PASSWORD": "Confirm the new password",
+    "MISMATCH": "The two passwords do not match",
+    "SAVE": "Change my password",
+    "SAVED": "Password changed"
+  },
+  "KOZE_ERRORS": {
+    "PAUSED": "Your access to this account is paused. Contact the account owner.",
+    "OUTSIDE_SCHEDULE": "You are outside your working hours, so you cannot reply now."
+  },
   "KOZE_NAV": {
     "NOTIFICATIONS": "Notifications",
     "NEW_CONVERSATION": "New conversation"
@@ -143,7 +195,7 @@
     "SIMULATED": "Test mode: payments are simulated, no money is charged.",
     "SUCCESS": "Payment confirmed",
     "FAILED": "The payment did not go through. Please try again.",
-    "CREDIT_AVAILABLE": "You have a paid inbox ready to set up.",
+    "CREDIT_AVAILABLE": "Paid inbox, ready to set up.",
     "CHOOSE_CHANNEL": "Choose the channel for your new inbox"
   },
   "REPORTS": {
@@ -433,7 +485,7 @@
   "SETTINGS": {
     "HEADER_TITLE": "Settings",
     "SET_AVAILABILITY": "Set yourself as",
-    "CHANGE_AVAILABILITY": "Set availability",
+    "CHANGE_AVAILABILITY": "Status",
     "PREFERENCES": "Preferences",
     "ABOUT": "About",
     "SUPPORT": "Support",

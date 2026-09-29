@@ -19,6 +19,7 @@ import {
 } from './camelCaseKeys';
 import { addNotification } from '@/store/notification/notificationSlice';
 import { setCurrentUserAvailability } from '@/store/auth/authSlice';
+import { setTeamPresence } from '@/store/team-presence/teamPresenceSlice';
 import { removeNotification } from '@/store/notification/notificationSlice';
 import {
   NotificationCreatedResponse,
@@ -165,6 +166,8 @@ class ActionCableConnector extends BaseActionCableConnector {
         users,
       }),
     );
+    // Koze: statuses of the whole team, for the online dot on the team screen.
+    store.dispatch(setTeamPresence(users));
   };
 }
 

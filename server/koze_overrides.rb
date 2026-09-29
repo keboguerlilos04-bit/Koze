@@ -155,6 +155,176 @@ module KozeBilling
   end
 end
 
+# Team rules: at most 3 agents and 2 administrators per account (the owner counts as an
+# administrator); an agent can be paused without being removed; each agent can have weekly
+# working hours. State lives in account.custom_attributes:
+#   koze_paused_user_ids: [user_id, ...]
+#   koze_schedules: { "user_id" => { "timezone" => "America/Port-au-Prince",
+#                                    "days" => { "mon" => { "start" => "08:00", "end" => "17:00" } } } }
+# A day missing from "days" is a day off. Outside working hours, or while paused, an agent
+# is set offline (so no conversation is assigned to them) and cannot send messages.
+module KozeTeam
+  MAX_AGENTS = 3
+  MAX_ADMINISTRATORS = 2
+  DEFAULT_TIMEZONE = 'America/Port-au-Prince'.freeze
+  DAYS = %w[sun mon tue wed thu fri sat].freeze
+  TIME = /\A([01]\d|2[0-3]):[0-5]\d\z/
+
+  class Error < StandardError; end
+
+  module_function
+
+  # Raises when adding (or promoting) someone to this role would exceed the limit.
+  def check_quota!(account, role, except_user_id: nil)
+    role = role.to_s.presence || 'agent'
+    scope = account.account_users.where(role: role)
+    scope = scope.where.not(user_id: except_user_id) if except_user_id
+    limit = role == 'administrator' ? MAX_ADMINISTRATORS : MAX_AGENTS
+    return if scope.count < limit
+
+    label = role == 'administrator' ? 'administrators' : 'agents'
+    raise Error, "This account already has the maximum of #{limit} #{label}"
+  end
+
+  def paused_ids(account)
+    Array(account.custom_attributes['koze_paused_user_ids']).map(&:to_i)
+  end
+
+  def paused?(account, user)
+    paused_ids(account).include?(user.id)
+  end
+
+  def set_paused!(account, user, paused)
+    ids = paused_ids(account) - [user.id]
+    ids << user.id if paused
+    account.update!(custom_attributes: account.custom_attributes.merge('koze_paused_user_ids' => ids))
+    sync_availability!(account, account.account_users.find_by(user_id: user.id))
+  end
+
+  def schedules(account)
+    account.custom_attributes['koze_schedules'] || {}
+  end
+
+  def schedule_for(account, user)
+    schedules(account)[user.id.to_s]
+  end
+
+  # nil removes the schedule (the agent can then work at any time).
+  def set_schedule!(account, user, schedule)
+    all = schedules(account).dup
+    if schedule.nil?
+      all.delete(user.id.to_s)
+    else
+      all[user.id.to_s] = normalize_schedule(schedule)
+    end
+    account.update!(custom_attributes: account.custom_attributes.merge('koze_schedules' => all))
+    sync_availability!(account, account.account_users.find_by(user_id: user.id))
+  end
+
+  def normalize_schedule(raw)
+    timezone = raw['timezone'].presence || DEFAULT_TIMEZONE
+    raise Error, 'Unknown timezone' unless ActiveSupport::TimeZone[timezone]
+
+    days = (raw['days'] || {}).to_h.each_with_object({}) do |(day, hours), result|
+      day = day.to_s
+      raise Error, "Unknown day #{day}" unless DAYS.include?(day)
+
+      start_at = hours['start'].to_s
+      end_at = hours['end'].to_s
+      raise Error, "Use HH:MM times for #{day}" unless start_at.match?(TIME) && end_at.match?(TIME)
+      raise Error, "The end must be after the start on #{day}" unless end_at > start_at
+
+      result[day] = { 'start' => start_at, 'end' => end_at }
+    end
+    { 'timezone' => timezone, 'days' => days }
+  end
+
+  # True when the user has no schedule, or `time` falls inside today's working hours.
+  def working?(account, user, time = Time.current)
+    schedule = schedule_for(account, user)
+    return true if schedule.blank?
+
+    local = time.in_time_zone(schedule['timezone'] || DEFAULT_TIMEZONE)
+    hours = schedule.dig('days', DAYS[local.wday])
+    return false if hours.blank?
+
+    now = local.strftime('%H:%M')
+    now >= hours['start'] && now < hours['end']
+  end
+
+  # Paused or outside working hours → offline; back inside hours → online. Users without a
+  # schedule who are not paused keep whatever status they chose.
+  def sync_availability!(account, account_user)
+    return unless account_user
+
+    user = account_user.user
+    desired = if paused?(account, user) then 'offline'
+              elsif schedule_for(account, user).present? then working?(account, user) ? 'online' : 'offline'
+              end
+    return if desired.nil? || account_user.availability == desired
+
+    account_user.update!(availability: desired)
+  end
+end
+
+# Enforces the team quota wherever agents are added (dashboard, API, the app).
+module KozeAgentBuilderQuota
+  def perform
+    existing = User.from_email(email)
+    unless existing && account.account_users.exists?(user_id: existing.id)
+      begin
+        KozeTeam.check_quota!(account, role)
+      rescue KozeTeam::Error => e
+        raise KozeQuotaExceeded, e.message
+      end
+    end
+    super
+  end
+end
+
+# Changing someone's role must respect the quota too.
+module KozeAgentRoleQuota
+  def update
+    new_role = params.dig(:agent, :role)
+    if new_role.present? && new_role.to_s != @agent.current_account_user&.role.to_s
+      begin
+        KozeTeam.check_quota!(Current.account, new_role, except_user_id: @agent.id)
+      rescue KozeTeam::Error => e
+        return render json: { message: e.message }, status: :unprocessable_entity
+      end
+    end
+    super
+  end
+end
+
+# A paused agent cannot use the account at all; the owner can never be paused. Hooked into
+# the account access check that every account-scoped API request runs once.
+module KozePausedAgentGuard
+  private
+
+  def account_accessible_for_user?(account)
+    super
+    return if performed? || @current_account_user.nil?
+    return unless KozeTeam.paused?(account, current_user)
+
+    render json: { message: 'Your access to this account is paused', error_code: 'koze_agent_paused' },
+           status: :forbidden
+  end
+end
+
+# Outside working hours an agent cannot send messages. Administrators are never limited.
+module KozeWorkingHoursGuard
+  def create
+    account_user = Current.account.account_users.find_by(user_id: current_user.id)
+    if account_user&.agent? && !KozeTeam.working?(Current.account, current_user)
+      return render json: { message: 'Outside your working hours', error_code: 'koze_outside_schedule' },
+                    status: :forbidden
+    end
+
+    super
+  end
+end
+
 # Signup from the app must include the owner's MonCash number, kept on the account (billing)
 # and on the user. Only unauthenticated signups are checked: an existing user adding an
 # account from the dashboard is not asked again.
@@ -201,7 +371,13 @@ Rails.application.routes.prepend do
     namespace :v1 do
       resources :accounts, only: [] do
         scope module: :accounts do
-          resources :koze_agents, only: [:create]
+          resources :koze_agents, only: [:index, :create, :update] do
+            member do
+              post :pause
+              post :resume
+              put :schedule
+            end
+          end
           resources :koze_payments, only: [:index, :create] do
             member { post :confirm }
             collection { patch :moncash }
@@ -218,5 +394,53 @@ Rails.application.config.to_prepare do
   Api::V1::AccountsController.prepend(KozeSignupMoncash) unless Api::V1::AccountsController < KozeSignupMoncash
   unless Api::V1::Accounts::InboxesController < KozeInboxPaywall
     Api::V1::Accounts::InboxesController.prepend(KozeInboxPaywall)
+  end
+
+  # Team rules (KozeTeam).
+  unless defined?(KozeQuotaExceeded)
+    # AgentsController answers AgentBuilder::LimitExceededError with a 402 and its message.
+    Object.const_set(:KozeQuotaExceeded, Class.new(AgentBuilder::LimitExceededError) do
+      def initialize(message)
+        @koze_message = message
+        super()
+      end
+
+      def message
+        @koze_message
+      end
+    end)
+  end
+  # Every 5 minutes (cron below), applies working hours and pauses to agents' availability.
+  unless defined?(KozeTeamAvailabilityJob)
+    Object.const_set(:KozeTeamAvailabilityJob, Class.new(ApplicationJob) do
+      queue_as :scheduled_jobs
+
+      def perform
+        Account.where("custom_attributes ? 'koze_schedules' OR custom_attributes ? 'koze_paused_user_ids'")
+               .find_each do |account|
+          account.account_users.includes(:user).find_each { |au| KozeTeam.sync_availability!(account, au) }
+        end
+      end
+    end)
+  end
+  AgentBuilder.prepend(KozeAgentBuilderQuota) unless AgentBuilder < KozeAgentBuilderQuota
+  unless Api::V1::Accounts::AgentsController < KozeAgentRoleQuota
+    Api::V1::Accounts::AgentsController.prepend(KozeAgentRoleQuota)
+  end
+  unless Api::V1::Accounts::BaseController < KozePausedAgentGuard
+    Api::V1::Accounts::BaseController.prepend(KozePausedAgentGuard)
+  end
+  unless Api::V1::Accounts::Conversations::MessagesController < KozeWorkingHoursGuard
+    Api::V1::Accounts::Conversations::MessagesController.prepend(KozeWorkingHoursGuard)
+  end
+end
+
+# Schedule the availability sync in the Sidekiq process only.
+Rails.application.config.after_initialize do
+  if defined?(Sidekiq::Cron::Job) && Sidekiq.server?
+    Sidekiq::Cron::Job.create(
+      name: 'koze_team_availability', cron: '*/5 * * * *',
+      class: 'KozeTeamAvailabilityJob', queue: 'scheduled_jobs'
+    )
   end
 end

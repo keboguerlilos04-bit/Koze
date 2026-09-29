@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { Alert, Animated, Pressable, ScrollView, View } from 'react-native';
+import { Animated, Pressable, ScrollView, View } from 'react-native';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -7,116 +7,164 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { tailwind } from '@/theme';
 import i18n from '@/i18n';
 import { useAppSelector } from '@/hooks';
-import { Button, Icon, Spinner } from '@/components-next';
-import { DeleteIcon } from '@/svg-icons';
+import { Button, Icon, KozeCard, Spinner } from '@/components-next';
+import { CaretRight } from '@/svg-icons';
 import { selectUserId } from '@/store/auth/authSelectors';
+import { selectTeamPresence } from '@/store/team-presence/teamPresenceSlice';
 import { AdminService, showAdminError } from '@/store/admin/adminService';
-import type { AdminAgent } from '@/store/admin/adminTypes';
+import type { TeamMember, TeamResponse } from '@/store/admin/adminTypes';
 import type { SettingsStackParamList } from '@/navigation/stack/SettingsStack';
+import { StatusDot, statusLabel } from './components/StatusDot';
 
-// Koze: the owner's list of agents, with add and remove.
+const Chip = ({ label, tone }: { label: string; tone: 'muted' | 'warning' | 'brand' }) => (
+  <View
+    style={tailwind.style(
+      'px-2 py-0.5 rounded-full',
+      tone === 'warning' ? 'bg-amber-100' : tone === 'brand' ? 'bg-blue-100' : 'bg-gray-100',
+    )}>
+    <Animated.Text
+      style={tailwind.style(
+        'text-xs font-inter-medium-24',
+        tone === 'warning'
+          ? 'text-amber-900'
+          : tone === 'brand'
+            ? 'text-blue-800'
+            : 'text-gray-800',
+      )}>
+      {label}
+    </Animated.Text>
+  </View>
+);
+
+// Koze: the owner's team. The dot shows who is online right now (websocket presence).
 const AdminAgentsScreen = () => {
   const navigation = useNavigation<NativeStackNavigationProp<SettingsStackParamList>>();
   const currentUserId = useAppSelector(selectUserId);
-  const [agents, setAgents] = useState<AdminAgent[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const presence = useAppSelector(selectTeamPresence);
+  const [team, setTeam] = useState<TeamResponse | null>(null);
 
-  // Reload on focus so an agent added on the next screen shows up on return.
   useFocusEffect(
     useCallback(() => {
       let isActive = true;
-      AdminService.listAgents()
-        .then(list => isActive && setAgents(list))
-        .catch(showAdminError)
-        .finally(() => isActive && setIsLoading(false));
+      AdminService.team()
+        .then(response => isActive && setTeam(response))
+        .catch(showAdminError);
       return () => {
         isActive = false;
       };
     }, []),
   );
 
-  const removeAgent = async (agent: AdminAgent) => {
-    try {
-      await AdminService.removeAgent(agent.id);
-      setAgents(list => list.filter(item => item.id !== agent.id));
-    } catch (error) {
-      showAdminError(error);
-    }
-  };
+  const liveStatus = (member: TeamMember) =>
+    member.paused ? 'offline' : (presence[member.id] ?? member.availability_status);
 
-  const confirmRemove = (agent: AdminAgent) => {
-    Alert.alert(
-      i18n.t('ADMIN.REMOVE_AGENT_TITLE', { name: agent.name }),
-      i18n.t('ADMIN.REMOVE_AGENT_MESSAGE'),
-      [
-        { text: i18n.t('ADMIN.CANCEL'), style: 'cancel' },
-        { text: i18n.t('ADMIN.REMOVE'), style: 'destructive', onPress: () => removeAgent(agent) },
-      ],
-    );
-  };
+  const agentsCount = team?.agents.filter(member => member.role === 'agent').length ?? 0;
+  const adminsCount = team?.agents.filter(member => member.role === 'administrator').length ?? 0;
+  const isAgentLimitReached = !!team && agentsCount >= team.limits.agents;
 
   return (
     <SafeAreaView edges={['bottom']} style={tailwind.style('flex-1 bg-koze-canvas')}>
       <ScrollView contentContainerStyle={tailwind.style('px-4 pt-2 pb-8')}>
-        <Animated.Text style={tailwind.style('font-inter-normal-20 text-gray-900 pb-4')}>
+        <Animated.Text style={tailwind.style('font-inter-normal-20 text-koze-muted pb-2')}>
           {i18n.t('ADMIN.AGENTS_DESCRIPTION')}
         </Animated.Text>
 
-        {isLoading ? (
+        {!team ? (
           <View style={tailwind.style('py-8 items-center')}>
             <Spinner size={24} />
           </View>
-        ) : agents.length === 0 ? (
-          <Animated.Text style={tailwind.style('font-inter-normal-20 text-gray-700 py-4')}>
-            {i18n.t('ADMIN.NO_AGENTS')}
-          </Animated.Text>
         ) : (
-          <View style={tailwind.style('rounded-2xl bg-white border-[1.5px] border-koze-line')}>
-            {agents.map((agent, index) => {
-              const isSelf = agent.id === currentUserId;
-              return (
-                <View
-                  key={agent.id}
-                  style={tailwind.style(
-                    'flex-row items-center px-3 py-3',
-                    index < agents.length - 1 ? 'border-b-[1px] border-b-koze-line' : '',
-                  )}>
-                  <View style={tailwind.style('flex-1 gap-1')}>
-                    <Animated.Text
-                      style={tailwind.style('text-base font-inter-medium-24 text-gray-950')}>
-                      {isSelf ? `${agent.name} (${i18n.t('ADMIN.YOU')})` : agent.name}
-                    </Animated.Text>
-                    <Animated.Text
-                      style={tailwind.style('text-sm font-inter-normal-20 text-gray-900')}>
-                      {agent.email}
-                    </Animated.Text>
-                    <Animated.Text
-                      style={tailwind.style('text-sm font-inter-normal-20 text-gray-700')}>
-                      {agent.role === 'administrator'
-                        ? i18n.t('ADMIN.ROLE_ADMINISTRATOR')
-                        : i18n.t('ADMIN.ROLE_AGENT')}
-                    </Animated.Text>
-                  </View>
-                  {!isSelf && (
-                    <Pressable
-                      hitSlop={8}
-                      accessibilityLabel={i18n.t('ADMIN.REMOVE')}
-                      onPress={() => confirmRemove(agent)}>
-                      <Icon size={22} icon={<DeleteIcon />} />
-                    </Pressable>
-                  )}
-                </View>
-              );
-            })}
-          </View>
-        )}
+          <>
+            <Animated.Text
+              style={tailwind.style('text-sm font-inter-medium-24 text-blue-800 pb-3')}>
+              {i18n.t('ADMIN.TEAM_LIMITS', {
+                agents: agentsCount,
+                maxAgents: team.limits.agents,
+                admins: adminsCount,
+                maxAdmins: team.limits.administrators,
+              })}
+            </Animated.Text>
 
-        <View style={tailwind.style('pt-6')}>
-          <Button
-            text={i18n.t('ADMIN.ADD_AGENT')}
-            handlePress={() => navigation.navigate('AdminAddAgent')}
-          />
-        </View>
+            <KozeCard>
+              {team.agents.map((member, index) => {
+                const isSelf = member.id === currentUserId;
+                const status = liveStatus(member);
+                return (
+                  <Pressable
+                    key={member.id}
+                    onPress={() =>
+                      navigation.navigate('AdminAgentDetail', {
+                        memberId: member.id,
+                        name: member.name,
+                      })
+                    }
+                    style={({ pressed }) =>
+                      tailwind.style(
+                        'flex-row items-center px-4 py-3 gap-3',
+                        pressed ? 'bg-blue-50' : '',
+                        index === 0 ? 'rounded-t-2xl' : '',
+                        index === team.agents.length - 1 ? 'rounded-b-2xl' : '',
+                        index < team.agents.length - 1 ? 'border-b-[1px] border-b-koze-line' : '',
+                      )
+                    }>
+                    <View style={tailwind.style('flex-1 gap-1')}>
+                      <View style={tailwind.style('flex-row items-center gap-2')}>
+                        <StatusDot status={status} />
+                        <Animated.Text
+                          numberOfLines={1}
+                          style={tailwind.style(
+                            'flex-shrink text-base font-inter-medium-24 text-koze-navy',
+                          )}>
+                          {isSelf ? `${member.name} (${i18n.t('ADMIN.YOU')})` : member.name}
+                        </Animated.Text>
+                      </View>
+                      <Animated.Text
+                        numberOfLines={1}
+                        style={tailwind.style('text-sm font-inter-normal-20 text-koze-muted')}>
+                        {member.email}
+                      </Animated.Text>
+                      <View
+                        style={tailwind.style('flex-row flex-wrap items-center gap-1.5 pt-0.5')}>
+                        <Chip
+                          tone="brand"
+                          label={
+                            member.is_owner
+                              ? i18n.t('ADMIN.OWNER')
+                              : member.role === 'administrator'
+                                ? i18n.t('ADMIN.ROLE_ADMINISTRATOR')
+                                : i18n.t('ADMIN.ROLE_AGENT')
+                          }
+                        />
+                        <Chip tone="muted" label={statusLabel(status)} />
+                        {member.paused && <Chip tone="warning" label={i18n.t('ADMIN.PAUSED')} />}
+                        {!member.paused && !member.working_now && (
+                          <Chip tone="warning" label={i18n.t('ADMIN.OUTSIDE_HOURS')} />
+                        )}
+                      </View>
+                    </View>
+                    <Icon size={20} icon={<CaretRight />} />
+                  </Pressable>
+                );
+              })}
+            </KozeCard>
+
+            <View style={tailwind.style('pt-6 gap-2')}>
+              <Button
+                disabled={isAgentLimitReached}
+                text={i18n.t('ADMIN.ADD_AGENT')}
+                handlePress={() => navigation.navigate('AdminAddAgent')}
+              />
+              {isAgentLimitReached && (
+                <Animated.Text
+                  style={tailwind.style(
+                    'text-sm text-center font-inter-normal-20 text-koze-muted',
+                  )}>
+                  {i18n.t('ADMIN.LIMIT_REACHED', { max: team.limits.agents })}
+                </Animated.Text>
+              )}
+            </View>
+          </>
+        )}
       </ScrollView>
     </SafeAreaView>
   );

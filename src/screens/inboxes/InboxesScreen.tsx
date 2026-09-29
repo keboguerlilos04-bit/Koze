@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { Animated, Pressable, ScrollView, StatusBar, View } from 'react-native';
+import { Animated, Pressable, ScrollView, View } from 'react-native';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -14,12 +14,12 @@ import { useTabBarHeight } from '@/utils';
 import { inboxActions } from '@/store/inbox/inboxActions';
 import { selectAllInboxes } from '@/store/inbox/inboxSelectors';
 import { selectIsAccountOwner } from '@/store/auth/authSelectors';
-import type { InboxesStackParamList } from '@/navigation/stack/InboxesStack';
+import type { SettingsStackParamList } from '@/navigation/stack/SettingsStack';
 
-// Koze: the Inboxes tab. Agents see the inboxes they answer; the owner can also add one
-// (after the MonCash paywall) and choose each inbox's agents.
+// Koze: Settings > Administration > Inboxes. The owner adds an inbox (after the MonCash
+// paywall) and chooses each inbox's agents.
 const InboxesScreen = () => {
-  const navigation = useNavigation<NativeStackNavigationProp<InboxesStackParamList>>();
+  const navigation = useNavigation<NativeStackNavigationProp<SettingsStackParamList>>();
   const dispatch = useAppDispatch();
   const inboxes = useAppSelector(selectAllInboxes);
   const isOwner = useAppSelector(selectIsAccountOwner);
@@ -32,21 +32,9 @@ const InboxesScreen = () => {
   );
 
   return (
-    <SafeAreaView edges={['top']} style={tailwind.style('flex-1 bg-koze-canvas')}>
-      <StatusBar
-        translucent
-        backgroundColor={tailwind.color('bg-koze-canvas')}
-        barStyle={'dark-content'}
-      />
-      <View style={tailwind.style('px-4 pt-1 pb-3 border-b-[1px] border-b-koze-line')}>
-        <Animated.Text
-          style={tailwind.style('text-[17px] leading-[20px] font-inter-580-24 text-koze-navy')}>
-          {i18n.t('INBOXES.TITLE')}
-        </Animated.Text>
-      </View>
-
+    <SafeAreaView edges={['bottom']} style={tailwind.style('flex-1 bg-koze-canvas')}>
       <ScrollView
-        contentContainerStyle={tailwind.style('px-4 pt-4', `pb-[${tabBarHeight + 24}px]`)}>
+        contentContainerStyle={tailwind.style('px-4 pt-2', `pb-[${tabBarHeight + 24}px]`)}>
         <Animated.Text style={tailwind.style('font-inter-normal-20 text-koze-muted pb-4')}>
           {isOwner ? i18n.t('INBOXES.DESCRIPTION_OWNER') : i18n.t('INBOXES.DESCRIPTION_AGENT')}
         </Animated.Text>

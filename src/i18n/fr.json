@@ -62,6 +62,44 @@
     "LOGIN": "Se connecter"
   },
   "ADMIN": {
+    "DAY_SUN": "Dimanche",
+    "DAY_SAT": "Samedi",
+    "DAY_FRI": "Vendredi",
+    "DAY_THU": "Jeudi",
+    "DAY_WED": "Mercredi",
+    "DAY_TUE": "Mardi",
+    "DAY_MON": "Lundi",
+    "REMOVE_FROM_ACCOUNT": "Retirer du compte",
+    "TIME_ERROR": "Utilisez le format HH:MM, la fin après le début",
+    "DAY_OFF": "Repos",
+    "SCHEDULE_SAVED": "Horaires enregistrés",
+    "SAVE_SCHEDULE": "Enregistrer les horaires",
+    "SCHEDULE_REMOVE": "Supprimer l'horaire",
+    "SCHEDULE_ENABLE": "Définir des horaires",
+    "SCHEDULE_NONE": "Aucun horaire : disponible à tout moment.",
+    "SCHEDULE_HINT": "En dehors de ces horaires, l'agent est hors ligne : pas de nouvelles conversations ni de réponses.",
+    "SCHEDULE_SECTION": "Horaires de travail",
+    "AGENT_RESUMED": "Agent réactivé",
+    "AGENT_PAUSED": "Agent mis en pause",
+    "PAUSE_HINT": "Un agent en pause garde son compte mais ne peut plus l'utiliser jusqu'à sa réactivation.",
+    "PAUSE_LABEL": "Mettre cet agent en pause",
+    "ACCESS_SECTION": "Accès",
+    "PASSWORD_CHANGED": "Mot de passe changé",
+    "SET_PASSWORD": "Changer le mot de passe",
+    "NEW_PASSWORD": "Nouveau mot de passe",
+    "PASSWORD_SECTION": "Mot de passe",
+    "CONTACT_SAVED": "Coordonnées enregistrées",
+    "SAVE_CONTACT": "Enregistrer les coordonnées",
+    "PHONE": "Numéro de téléphone",
+    "CONTACT_SECTION": "Coordonnées",
+    "OUTSIDE_HOURS": "Hors horaires",
+    "PAUSED": "En pause",
+    "OFFLINE": "Hors ligne",
+    "BUSY": "Occupé",
+    "ONLINE": "En ligne",
+    "OWNER": "Propriétaire",
+    "LIMIT_REACHED": "Vous avez atteint la limite de {{max}} agents.",
+    "TEAM_LIMITS": "{{agents}}/{{maxAgents}} agents · {{admins}}/{{maxAdmins}} administrateurs",
     "SECTION": "Administration",
     "AGENTS": "Agents",
     "INBOXES": "Boîtes de réception",
@@ -109,6 +147,20 @@
     "SAVING": "Enregistrement...",
     "SAVED": "Enregistré"
   },
+  "PROFILE": {
+    "SECTION": "Mon compte",
+    "CHANGE_PASSWORD": "Changer mon mot de passe",
+    "CURRENT_PASSWORD": "Mot de passe actuel",
+    "NEW_PASSWORD": "Nouveau mot de passe",
+    "CONFIRM_PASSWORD": "Confirmer le nouveau mot de passe",
+    "MISMATCH": "Les deux mots de passe ne correspondent pas",
+    "SAVE": "Changer mon mot de passe",
+    "SAVED": "Mot de passe changé"
+  },
+  "KOZE_ERRORS": {
+    "PAUSED": "Votre accès à ce compte est en pause. Contactez le propriétaire du compte.",
+    "OUTSIDE_SCHEDULE": "Vous êtes en dehors de vos horaires : vous ne pouvez pas répondre maintenant."
+  },
   "KOZE_NAV": {
     "NOTIFICATIONS": "Notifications",
     "NEW_CONVERSATION": "Nouvelle conversation"
@@ -139,7 +191,7 @@
     "SIMULATED": "Mode test : les paiements sont simulés, aucun argent n'est prélevé.",
     "SUCCESS": "Paiement confirmé",
     "FAILED": "Le paiement n'a pas abouti. Veuillez réessayer.",
-    "CREDIT_AVAILABLE": "Vous avez une boîte payée prête à configurer.",
+    "CREDIT_AVAILABLE": "Boîte payée et prête.",
     "CHOOSE_CHANNEL": "Choisissez le canal de votre nouvelle boîte"
   },
   "REPORTS": {
@@ -394,7 +446,7 @@
   "SETTINGS": {
     "HEADER_TITLE": "Paramètres",
     "SET_AVAILABILITY": "Se définir comme",
-    "CHANGE_AVAILABILITY": "Set availability",
+    "CHANGE_AVAILABILITY": "Statut",
     "PREFERENCES": "Preferences",
     "ABOUT": "About",
     "SUPPORT": "Support",

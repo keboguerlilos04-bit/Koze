@@ -13,7 +13,7 @@ import { Button } from '@/components-next';
 import { showToast } from '@/utils/toastUtils';
 import { inboxActions } from '@/store/inbox/inboxActions';
 import { AdminService, showAdminError } from '@/store/admin/adminService';
-import type { InboxesStackParamList } from '@/navigation/stack/InboxesStack';
+import type { SettingsStackParamList } from '@/navigation/stack/SettingsStack';
 import { AdminTextField } from './components/AdminTextField';
 
 type Fields = {
@@ -40,8 +40,8 @@ const PHONE_REGEX = /^\+\d{8,15}$/;
 
 // Koze: creates a Telegram or WhatsApp (Cloud API) inbox, then opens its agent picker.
 const AdminAddInboxScreen = () => {
-  const navigation = useNavigation<NativeStackNavigationProp<InboxesStackParamList>>();
-  const { channel } = useRoute<RouteProp<InboxesStackParamList, 'AdminAddInbox'>>().params;
+  const navigation = useNavigation<NativeStackNavigationProp<SettingsStackParamList>>();
+  const { channel } = useRoute<RouteProp<SettingsStackParamList, 'AdminAddInbox'>>().params;
   const dispatch = useAppDispatch();
   const isTelegram = channel === 'telegram';
   const [fields, setFields] = useState<Fields>(EMPTY_FIELDS);

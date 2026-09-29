@@ -40,6 +40,24 @@ const isForPreviousAccount = (url?: string): boolean => {
   );
 };
 
+// Koze: the server refuses requests from a paused agent, and replies sent outside the
+// agent's working hours. Explain why instead of "could not connect".
+const kozeTeamRuleMessage = (error: AxiosError): string | null => {
+  const code = (error.response?.data as { error_code?: string } | undefined)?.error_code;
+  if (code === 'koze_agent_paused') return I18n.t('KOZE_ERRORS.PAUSED');
+  if (code === 'koze_outside_schedule') return I18n.t('KOZE_ERRORS.OUTSIDE_SCHEDULE');
+  return null;
+};
+
+// Many requests fail together for a paused agent: show the explanation once per 10 s.
+let lastKozeToastAt = 0;
+const showKozeTeamRuleToast = (message: string) => {
+  const now = Date.now();
+  if (now - lastKozeToastAt < 10_000) return;
+  lastKozeToastAt = now;
+  showToast({ message });
+};
+
 const CLIENT_NAME = 'Chatwoot Mobile';
 const CLIENT_VERSION = Constants.expoConfig?.version ?? 'unknown';
 
@@ -132,9 +150,12 @@ class APIService {
         if (isForPreviousAccount(error.config?.url)) {
           return Promise.reject(new axios.CanceledError('Ignoring error for a previous account'));
         }
+        const kozeMessage = kozeTeamRuleMessage(error);
         if (error.response?.status === 401) {
           const store = getStore();
           store.dispatch({ type: 'auth/logout' });
+        } else if (kozeMessage) {
+          showKozeTeamRuleToast(kozeMessage);
         } else if (!(error.config?.skipErrorToast && error.response)) {
           showToast({ message: I18n.t('ERRORS.COMMON_ERROR') });
         }

@@ -36,6 +36,9 @@ import { useRefsContext } from '@/context';
 import {
   ChatwootIcon,
   NotificationIcon,
+  GridIcon,
+  InboxFilterIcon,
+  LockIcon,
   SwitchIcon,
   TeamIcon,
   TranslateIcon,
@@ -240,7 +243,7 @@ const SettingsScreen = () => {
     },
   ];
 
-  // Koze: only the account owner manages the team from the app (inboxes have their own tab).
+  // Koze: only the account owner manages the team, inboxes and reports from the app.
   const isAccountOwner = useAppSelector(selectIsAccountOwner);
   const adminList: GenericListType[] = [
     {
@@ -250,6 +253,34 @@ const SettingsScreen = () => {
       subtitle: '',
       subtitleType: 'light',
       onPressListItem: () => navigation.navigate('AdminAgents' as never),
+    },
+    {
+      hasChevron: true,
+      title: i18n.t('INBOXES.TITLE'),
+      icon: <InboxFilterIcon />,
+      subtitle: '',
+      subtitleType: 'light',
+      onPressListItem: () => navigation.navigate('Inboxes' as never),
+    },
+    {
+      hasChevron: true,
+      title: i18n.t('REPORTS.TITLE'),
+      icon: <GridIcon />,
+      subtitle: '',
+      subtitleType: 'light',
+      onPressListItem: () => navigation.navigate('Reports' as never),
+    },
+  ];
+
+  // Koze: everyone changes their own password here.
+  const accountList: GenericListType[] = [
+    {
+      hasChevron: true,
+      title: i18n.t('PROFILE.CHANGE_PASSWORD'),
+      icon: <LockIcon />,
+      subtitle: '',
+      subtitleType: 'light',
+      onPressListItem: () => navigation.navigate('ChangePassword' as never),
     },
   ];
 
@@ -317,6 +348,9 @@ const SettingsScreen = () => {
         )}
         <Animated.View style={tailwind.style('pt-6')}>
           <SettingsList sectionTitle={i18n.t('SETTINGS.PREFERENCES')} list={preferencesList} />
+        </Animated.View>
+        <Animated.View style={tailwind.style('pt-6')}>
+          <SettingsList sectionTitle={i18n.t('PROFILE.SECTION')} list={accountList} />
         </Animated.View>
         {supportList.length > 0 && (
           <Animated.View style={tailwind.style('pt-6')}>

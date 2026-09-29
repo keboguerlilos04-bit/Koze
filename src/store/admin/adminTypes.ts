@@ -9,6 +9,36 @@ export interface AdminAgent {
   confirmed: boolean;
 }
 
+export type WeekDay = 'sun' | 'mon' | 'tue' | 'wed' | 'thu' | 'fri' | 'sat';
+
+// Weekly working hours ("HH:MM"); a day missing from `days` is a day off.
+export interface WorkSchedule {
+  timezone: string;
+  days: Partial<Record<WeekDay, { start: string; end: string }>>;
+}
+
+// A member of the team as the owner sees it (server: koze_agents index).
+export interface TeamMember extends AdminAgent {
+  phone_number: string | null;
+  is_owner: boolean;
+  availability_status: 'online' | 'offline' | 'busy';
+  paused: boolean;
+  schedule: WorkSchedule | null;
+  working_now: boolean;
+}
+
+export interface TeamResponse {
+  limits: { agents: number; administrators: number };
+  agents: TeamMember[];
+}
+
+export interface UpdateMemberPayload {
+  name?: string;
+  email?: string;
+  phone_number?: string;
+  password?: string;
+}
+
 export interface CreateAgentPayload {
   name: string;
   email: string;

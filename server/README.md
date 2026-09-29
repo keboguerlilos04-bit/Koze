@@ -43,6 +43,17 @@ typed at signup instead of renaming the account after the email domain's website
 account owner (the administrator nobody invited) may call it. It creates the agent
 with the temporary password the owner chose, so no invitation email is needed.
 
+## Team rules
+
+`KozeTeam` in `koze_overrides.rb`: at most 3 agents and 2 administrators per account
+(the owner counts as an administrator), checked wherever someone is added or promoted.
+The owner can pause an agent (every account API call then answers 403
+`koze_agent_paused`) and give agents weekly working hours: outside them the agent cannot
+send messages (403 `koze_outside_schedule`) and `KozeTeamAvailabilityJob` (Sidekiq cron,
+every 5 minutes) sets them offline so no conversation is assigned to them.
+`koze_agents_controller.rb` also lets the owner edit anyone's name, email, phone and
+password.
+
 ## MonCash inbox billing
 
 Each new inbox costs 1,500 HTG for 30 days. `koze_payments_controller.rb` adds:

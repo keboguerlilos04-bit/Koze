@@ -70,6 +70,21 @@ export class AuthService {
     };
   }
 
+  // Koze: anyone changes their own password from Settings; the current one is required.
+  static async changePassword(currentPassword: string, newPassword: string): Promise<void> {
+    await apiService.put(
+      'profile',
+      {
+        profile: {
+          current_password: currentPassword,
+          password: newPassword,
+          password_confirmation: newPassword,
+        },
+      },
+      { skipErrorToast: true },
+    );
+  }
+
   static async resetPassword(payload: ResetPasswordPayload): Promise<ResetPasswordResponse> {
     const response = await apiService.post<ResetPasswordResponse>('auth/password', payload);
     return response.data;

@@ -20,7 +20,7 @@ import { selectWebSocketUrl } from '@/store/settings/settingsSelectors';
 import { getUserPermissions } from '@/utils/permissionUtils';
 import { CONVERSATION_PERMISSIONS } from 'constants/permissions';
 
-import { AuthStack, ConversationStack, InboxesStack, ReportsStack, SettingsStack } from '../stack';
+import { AuthStack, ConversationStack, SettingsStack } from '../stack';
 import ChatScreen from '@/screens/chat-screen/ChatScreen';
 import ContactDetailsScreen from '@/screens/contact-details/ContactDetailsScreen';
 import DashboardScreen from '@/screens/dashboard/DashboardScreen';
@@ -50,9 +50,7 @@ const Tab = createBottomTabNavigator();
 
 export type TabParamList = {
   Conversations: undefined;
-  // Koze: WhatsApp / Telegram inboxes (notifications moved behind the bell).
-  Inboxes: undefined;
-  Reports: undefined;
+  // Koze: inboxes and reports live in Settings > Administration; notifications behind the bell.
   Settings: undefined;
   Login: undefined;
   ConfigInstallationURL: undefined;
@@ -195,13 +193,6 @@ const Tabs = () => {
           options={{ headerShown: false }}
           component={ConversationStack}
         />
-      )}
-      {hasConversationPermission && (
-        <Tab.Screen name="Inboxes" options={{ headerShown: false }} component={InboxesStack} />
-      )}
-      {/* Koze: Chatwoot only serves reports to administrators. */}
-      {currentAccountRole === 'administrator' && (
-        <Tab.Screen name="Reports" options={{ headerShown: false }} component={ReportsStack} />
       )}
       <Tab.Screen name="Settings" options={{ headerShown: false }} component={SettingsStack} />
     </Tab.Navigator>
