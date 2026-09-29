@@ -22,6 +22,7 @@
     "ERROR": "Lien d'installation invalide"
   },
   "LOGIN": {
+    "KOZE_SUBTITLE": "Bon retour. Connectez-vous pour répondre à vos clients.",
     "TITLE": "Log in to your account",
     "DESCRIPTION": "You are connected to {{baseUrl}}.",
     "EMAIL": "Courriel",
@@ -115,6 +116,7 @@
     "API_SUCCESS": "Le lien de réinitialisation du mot de passe a été envoyé à votre adresse e-mail"
   },
   "CONVERSATION": {
+    "KOZE_EMPTY_HINT": "Les nouveaux messages de vos clients apparaîtront ici.",
     "HEADER": {
       "TITLE": "Conversations",
       "CLEAR_FILTER": "Clear"
@@ -341,6 +343,7 @@
     "DEBUG_ACTIONS": "Debug Actions"
   },
   "NOTIFICATION": {
+    "KOZE_EMPTY_HINT": "Vous êtes à jour.",
     "HEADER_TITLE": "Notifications",
     "INBOX": "Boîte de réception",
     "EMPTY": "Aucune notifications pour le moment.",

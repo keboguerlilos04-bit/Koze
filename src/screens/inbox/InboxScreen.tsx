@@ -22,7 +22,7 @@ import { useTabBarHeight } from '@/utils';
 import i18n from '@/i18n';
 import { selectSortOrder } from '@/store/notification/notificationFilterSlice';
 import { selectCurrentUserAccountId } from '@/store/auth/authSelectors';
-import { EmptyStateIcon } from '@/svg-icons';
+import { KozeEmptyState } from '@/components-next';
 import { InboxSortTypes } from '@/store/notification/notificationTypes';
 
 const AnimatedFlashlist = Animated.createAnimatedComponent(FlashList<Notification>);
@@ -140,10 +140,10 @@ const InboxList = () => {
         'flex-1 items-center justify-center',
         `pb-[${tabBarHeight}px]`,
       )}>
-      <EmptyStateIcon />
-      <Animated.Text style={tailwind.style('pt-6 text-md tracking-[0.32px] text-gray-800')}>
-        {i18n.t('NOTIFICATION.EMPTY')}
-      </Animated.Text>
+      <KozeEmptyState
+        title={i18n.t('NOTIFICATION.EMPTY')}
+        subtitle={i18n.t('NOTIFICATION.KOZE_EMPTY_HINT')}
+      />
     </Animated.ScrollView>
   ) : (
     <AnimatedFlashlist
@@ -172,10 +172,10 @@ const InboxScreen = () => {
   }, [dispatch]);
 
   return (
-    <SafeAreaView edges={['top']} style={tailwind.style('flex-1 bg-white')}>
+    <SafeAreaView edges={['top']} style={tailwind.style('flex-1 bg-koze-canvas')}>
       <StatusBar
         translucent
-        backgroundColor={tailwind.color('bg-white')}
+        backgroundColor={tailwind.color('bg-koze-canvas')}
         barStyle={'dark-content'}
       />
       <InboxListStateProvider>

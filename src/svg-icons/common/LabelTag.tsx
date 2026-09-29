@@ -3,7 +3,7 @@ import Svg, { ClipPath, Defs, G, Path, Rect } from 'react-native-svg';
 
 import { IconProps } from '../../types';
 
-export const LabelTag = ({ stroke = '#0081F1' }: IconProps): JSX.Element => {
+export const LabelTag = ({ stroke = '#226476' }: IconProps): JSX.Element => {
   return (
     <Svg width="100%" height="100%" viewBox="0 0 16 16" fill="none">
       <G clip-path="url(#clip0_1807_10408)">

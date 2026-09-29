@@ -79,7 +79,7 @@ const AdminAddAgentScreen = () => {
   };
 
   return (
-    <SafeAreaView edges={['bottom']} style={tailwind.style('flex-1 bg-white')}>
+    <SafeAreaView edges={['bottom']} style={tailwind.style('flex-1 bg-koze-canvas')}>
       <KeyboardAwareScrollView
         keyboardShouldPersistTaps="handled"
         bottomOffset={24}

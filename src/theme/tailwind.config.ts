@@ -1,3 +1,4 @@
+import { KOZE_COLORS, KOZE_TEAL, KOZE_TEAL_ALPHA } from './colors/koze';
 /* eslint-disable @typescript-eslint/no-require-imports */
 const defaultTheme = require('tailwindcss/defaultTheme');
 
@@ -16,6 +17,10 @@ const chatwootAppColors = {
   ...whiteA,
   ...radixUILightColors,
   ...radixUIDarkColors,
+  // Koze: every `blue-*` accent (buttons, links, selections) becomes Koze teal.
+  blue: KOZE_TEAL,
+  blueA: KOZE_TEAL_ALPHA,
+  koze: KOZE_COLORS,
 };
 
 export const twConfig = {

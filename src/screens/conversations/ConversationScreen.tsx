@@ -16,7 +16,7 @@ import {
 import { ActionTabs } from '@/components-next';
 import { Sheet } from '@/components-next/common/sheet/Sheet';
 
-import { EmptyStateIcon } from '@/svg-icons';
+import { KozeEmptyState } from '@/components-next';
 import { SCREENS, LAST_ACTIVE_TIMESTAMP_KEY, LAST_ACTIVE_TIMESTAMP_THRESHOLD } from '@/constants';
 import {
   ConversationListStateProvider,
@@ -224,10 +224,10 @@ const ConversationList = () => {
         'flex-1 items-center justify-center',
         `pb-[${tabBarHeight}px]`,
       )}>
-      <EmptyStateIcon />
-      <Animated.Text style={tailwind.style('pt-6 text-md  tracking-[0.32px] text-gray-800')}>
-        {i18n.t('CONVERSATION.EMPTY')}
-      </Animated.Text>
+      <KozeEmptyState
+        title={i18n.t('CONVERSATION.EMPTY')}
+        subtitle={i18n.t('CONVERSATION.KOZE_EMPTY_HINT')}
+      />
     </Animated.ScrollView>
   ) : (
     <AnimatedFlashList
@@ -277,10 +277,10 @@ const ConversationScreen = () => {
   })();
 
   return (
-    <SafeAreaView edges={['top']} style={tailwind.style('flex-1 bg-white')}>
+    <SafeAreaView edges={['top']} style={tailwind.style('flex-1 bg-koze-canvas')}>
       <StatusBar
         translucent
-        backgroundColor={tailwind.color('bg-white')}
+        backgroundColor={tailwind.color('bg-koze-canvas')}
         barStyle={'dark-content'}
       />
       <ConversationListStateProvider>

@@ -8,6 +8,7 @@ import AdminInboxesScreen from '@/screens/admin/AdminInboxesScreen';
 import AdminAddInboxScreen from '@/screens/admin/AdminAddInboxScreen';
 import AdminInboxAgentsScreen from '@/screens/admin/AdminInboxAgentsScreen';
 import i18n from '@/i18n';
+import { KOZE_COLORS } from '@/theme/colors/koze';
 
 export type SettingsStackParamList = {
   SettingsScreen: undefined;
@@ -25,6 +26,9 @@ const adminScreenOptions = (title: string) => ({
   headerShown: true,
   headerBackTitle: 'Back',
   headerShadowVisible: false,
+  headerStyle: { backgroundColor: KOZE_COLORS.canvas },
+  headerTintColor: KOZE_COLORS.primary,
+  headerTitleStyle: { color: KOZE_COLORS.navy },
   title,
 });
 

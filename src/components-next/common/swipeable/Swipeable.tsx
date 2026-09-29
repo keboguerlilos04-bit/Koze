@@ -20,6 +20,7 @@ import Animated, {
 import { scheduleOnRN } from 'react-native-worklets';
 
 import { tailwind } from '@/theme';
+import { KOZE_COLORS } from '@/theme/colors/koze';
 import { useHaptic } from '@/utils';
 import { AnimatedNativeView } from '@/components-next/native-components';
 
@@ -134,7 +135,9 @@ export const Swipeable = forwardRef((props: SwipeableProps, _ref) => {
   const isGestureActive = useSharedValue(false);
 
   const maxTranslation = WIDTH * 0.6;
-  const tappedBgStyle = tailwind.color('bg-gray-200') as string;
+  // Koze: rows sit on the tinted page background; list items draw their own white card.
+  const tappedBgStyle = tailwind.color('bg-blue-100') as string;
+  const restingBgStyle = KOZE_COLORS.canvas;
   const maxSnapPointLeft = -maxTranslation;
   const maxSnapPointRight = maxTranslation;
 
@@ -429,7 +432,7 @@ export const Swipeable = forwardRef((props: SwipeableProps, _ref) => {
 
   const tappedCellStyle = useAnimatedStyle(() => {
     return {
-      backgroundColor: interpolateColor(isTapped.value, [0, 1], ['white', tappedBgStyle]),
+      backgroundColor: interpolateColor(isTapped.value, [0, 1], [restingBgStyle, tappedBgStyle]),
     };
   });
 

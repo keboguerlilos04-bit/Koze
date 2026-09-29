@@ -56,7 +56,7 @@ const AdminAgentsScreen = () => {
   };
 
   return (
-    <SafeAreaView edges={['bottom']} style={tailwind.style('flex-1 bg-white')}>
+    <SafeAreaView edges={['bottom']} style={tailwind.style('flex-1 bg-koze-canvas')}>
       <ScrollView contentContainerStyle={tailwind.style('px-4 pt-2 pb-8')}>
         <Animated.Text style={tailwind.style('font-inter-normal-20 text-gray-900 pb-4')}>
           {i18n.t('ADMIN.AGENTS_DESCRIPTION')}
@@ -71,7 +71,7 @@ const AdminAgentsScreen = () => {
             {i18n.t('ADMIN.NO_AGENTS')}
           </Animated.Text>
         ) : (
-          <View style={tailwind.style('rounded-[13px] bg-gray-50')}>
+          <View style={tailwind.style('rounded-2xl bg-white border-[1.5px] border-koze-line')}>
             {agents.map((agent, index) => {
               const isSelf = agent.id === currentUserId;
               return (
@@ -79,7 +79,7 @@ const AdminAgentsScreen = () => {
                   key={agent.id}
                   style={tailwind.style(
                     'flex-row items-center px-3 py-3',
-                    index < agents.length - 1 ? 'border-b-[1px] border-b-blackA-A3' : '',
+                    index < agents.length - 1 ? 'border-b-[1px] border-b-koze-line' : '',
                   )}>
                   <View style={tailwind.style('flex-1 gap-1')}>
                     <Animated.Text

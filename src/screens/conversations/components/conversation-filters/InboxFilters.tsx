@@ -88,7 +88,7 @@ export const InboxFilters = () => {
       contentContainerStyle={tailwind.style('pb-4')}
       stickyHeaderIndices={[0]}
       showsVerticalScrollIndicator={true}>
-      <Animated.View style={tailwind.style('bg-white pb-3')}>
+      <Animated.View style={tailwind.style('bg-koze-canvas pb-3')}>
         <BottomSheetHeader headerText={i18n.t('CONVERSATION.FILTERS.INBOX.TITLE')} />
       </Animated.View>
       <Animated.View style={tailwind.style('pl-3')}>

@@ -289,10 +289,10 @@ const SettingsScreen = () => {
   }
 
   return (
-    <SafeAreaView style={tailwind.style('flex-1 bg-white font-inter-normal-20')}>
+    <SafeAreaView style={tailwind.style('flex-1 bg-koze-canvas font-inter-normal-20')}>
       <StatusBar
         translucent
-        backgroundColor={tailwind.color('bg-white')}
+        backgroundColor={tailwind.color('bg-koze-canvas')}
         barStyle={'dark-content'}
       />
       <SettingsHeader />

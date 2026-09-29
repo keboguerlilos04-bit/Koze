@@ -76,7 +76,7 @@ export const NotificationPreferences = () => {
             {i18n.t(`NOTIFICATION_PREFERENCE.${NOTIFICATION_PREFERENCE_TYPES[item]}`)}
           </Animated.Text>
           <Switch
-            trackColor={{ false: '#C9D7E3', true: '#1F93FF' }}
+            trackColor={{ false: '#C9D7E3', true: '#226476' }}
             thumbColor="#FFFFFF"
             style={styles.switch}
             ios_backgroundColor="#C9D7E3"

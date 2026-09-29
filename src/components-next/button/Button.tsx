@@ -13,12 +13,18 @@ type ButtonProps = {
   disabled?: boolean;
 };
 
+// Koze: 16px corners; primary = Koze teal, secondary = white card with a soft outline.
 const getButtonStyles = (isPrimary: boolean, pressed: boolean) => {
-  const baseStyles = 'py-[11px] flex items-center justify-center rounded-[13px]';
-  const variantStyles = isPrimary ? 'bg-blue-800' : 'bg-gray-50';
-  const pressedStyles = isPrimary ? 'opacity-95' : pressed ? 'bg-gray-100' : '';
+  const baseStyles = 'py-[13px] flex items-center justify-center rounded-2xl';
+  const variantStyles = isPrimary
+    ? pressed
+      ? 'bg-blue-900'
+      : 'bg-blue-800'
+    : pressed
+      ? 'bg-blue-50 border-[1.5px] border-koze-line'
+      : 'bg-white border-[1.5px] border-koze-line';
 
-  return tailwind.style(baseStyles, variantStyles, pressedStyles);
+  return tailwind.style(baseStyles, variantStyles);
 };
 
 const getTextStyles = (isPrimary: boolean, isDestructive: boolean) => {
@@ -29,7 +35,7 @@ const getTextStyles = (isPrimary: boolean, isDestructive: boolean) => {
       : 'text-white'
     : isDestructive
       ? 'text-ruby-800'
-      : 'text-gray-950';
+      : 'text-blue-800';
 
   return tailwind.style(baseStyles, colorStyles);
 };

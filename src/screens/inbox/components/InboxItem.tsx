@@ -50,7 +50,10 @@ export const InboxItemComponent = (props: InboxItemProps) => {
   const hasAssignee = assignee?.name || assignee?.thumbnail;
 
   return (
-    <Animated.View style={tailwind.style('ml-3 py-3 pr-4 border-b-[1px] border-b-blackA-A3')}>
+    <Animated.View
+      style={tailwind.style(
+        'mx-3 my-1 py-3 px-4 rounded-2xl bg-white border-[1.5px] border-koze-line overflow-hidden',
+      )}>
       <Animated.View style={tailwind.style('')}>
         <AnimatedNativeView
           style={tailwind.style('flex flex-row justify-between items-center h-[24px]')}>

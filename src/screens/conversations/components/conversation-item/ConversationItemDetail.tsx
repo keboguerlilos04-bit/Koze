@@ -88,7 +88,7 @@ export const ConversationItemDetail = memo((props: ConversationDetailSubCellProp
   return (
     <AnimatedNativeView
       layout={LinearTransition.springify().mass(1).damping(21).stiffness(115)}
-      style={tailwind.style('flex-1 gap-1 py-3 border-b-[1px] border-b-blackA-A3')}>
+      style={tailwind.style('flex-1 gap-1 py-3')}>
       <AnimatedNativeView
         style={tailwind.style('flex flex-row justify-between items-center h-[24px]')}>
         <AnimatedNativeView style={tailwind.style('flex flex-row items-center h-[24px] gap-[5px]')}>

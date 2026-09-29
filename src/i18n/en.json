@@ -22,6 +22,7 @@
     "ERROR": "Invalid installation url"
   },
   "LOGIN": {
+    "KOZE_SUBTITLE": "Welcome back. Sign in to answer your customers.",
     "TITLE": "Log in to your account",
     "DESCRIPTION": "You are connected to {{baseUrl}}.",
     "EMAIL": "Email",
@@ -144,6 +145,7 @@
     }
   },
   "CONVERSATION": {
+    "KOZE_EMPTY_HINT": "New messages from your customers will show up here.",
     "HEADER": {
       "TITLE": "Conversations",
       "CLEAR_FILTER": "Clear"
@@ -380,6 +382,7 @@
     "DEBUG_ACTIONS": "Debug Actions"
   },
   "NOTIFICATION": {
+    "KOZE_EMPTY_HINT": "You're all caught up.",
     "HEADER_TITLE": "Notifications",
     "INBOX": "Inbox",
     "EMPTY": "No notifications yet.",

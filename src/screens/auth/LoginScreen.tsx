@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { Animated, Image, Pressable, ScrollView, StatusBar, TextInput, View } from 'react-native';
+import { Animated, Pressable, ScrollView, StatusBar, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
@@ -13,13 +13,18 @@ import { resetAuth } from '@/store/auth/authSlice';
 import { authActions } from '@/store/auth/authActions';
 import { useAppDispatch, useAppSelector } from '@/hooks';
 
-import { BottomSheetHeader, LanguageList, Button, Icon, AuthButton } from '@/components-next';
-import { Sheet } from '@/components-next/common/sheet/Sheet';
 import {
-  selectInstallationUrl,
-  selectBaseUrl,
-  selectLocale,
-} from '@/store/settings/settingsSelectors';
+  BottomSheetHeader,
+  LanguageList,
+  Button,
+  Icon,
+  AuthButton,
+  KozeAuthHeader,
+  KozeCard,
+  KozeTextInput,
+} from '@/components-next';
+import { Sheet } from '@/components-next/common/sheet/Sheet';
+import { selectInstallationUrl, selectLocale } from '@/store/settings/settingsSelectors';
 import { selectIsLoggingIn } from '@/store/auth/authSelectors';
 import { setLocale } from '@/store/settings/settingsSlice';
 import { useRefsContext } from '@/context/RefsContext';
@@ -50,7 +55,6 @@ const LoginScreen = () => {
   const isLoggingIn = useAppSelector(selectIsLoggingIn);
 
   const installationUrl = useAppSelector(selectInstallationUrl);
-  const baseUrl = useAppSelector(selectBaseUrl);
   const activeLocale = useAppSelector(selectLocale);
 
   useEffect(() => {
@@ -113,57 +117,40 @@ const LoginScreen = () => {
   };
 
   return (
-    <SafeAreaView edges={['top']} style={tailwind.style('flex-1 bg-white')}>
+    <SafeAreaView edges={['top']} style={tailwind.style('flex-1 bg-koze-canvas')}>
       <StatusBar
         translucent
-        backgroundColor={tailwind.color('bg-white')}
+        backgroundColor={tailwind.color('bg-koze-canvas')}
         barStyle={'dark-content'}
       />
-      <View style={tailwind.style('flex-1 bg-white')}>
-        <KeyboardAwareScrollView
-          showsVerticalScrollIndicator={false}
-          keyboardShouldPersistTaps="handled"
-          bottomOffset={24}
-          contentContainerStyle={tailwind.style('px-6 pt-24 pb-8')}>
-          <Image
-            // eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-require-imports
-            source={require('@/assets/images/logo.png')}
-            style={tailwind.style('w-20 h-24')}
-            resizeMode="contain"
-          />
-          <View style={tailwind.style('pt-6 gap-4')}>
-            <Animated.Text style={tailwind.style('text-2xl text-gray-950 font-inter-semibold-20')}>
-              {i18n.t('LOGIN.TITLE')}
-            </Animated.Text>
-            <Animated.Text
-              style={tailwind.style(
-                'font-inter-normal-20 leading-[18px] tracking-[0.32px] text-gray-900',
-              )}>
-              {i18n.t('LOGIN.DESCRIPTION', { baseUrl })}
-            </Animated.Text>
-          </View>
+      <KeyboardAwareScrollView
+        showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
+        bottomOffset={24}
+        contentContainerStyle={tailwind.style('px-5 pt-12 pb-8')}>
+        <KozeAuthHeader title={i18n.t('LOGIN.TITLE')} subtitle={i18n.t('LOGIN.KOZE_SUBTITLE')} />
 
-          {showSsoLogin && (
-            <View>
-              <AuthButton
-                text={i18n.t('LOGIN.LOGIN_VIA_SSO')}
-                icon={<LockIcon />}
-                handlePress={handleSsoLogin}
-                disabled={isLoggingIn}
-                variant="outline"
-                style={tailwind.style('mt-8')}
-              />
+        {showSsoLogin && (
+          <View>
+            <AuthButton
+              text={i18n.t('LOGIN.LOGIN_VIA_SSO')}
+              icon={<LockIcon />}
+              handlePress={handleSsoLogin}
+              disabled={isLoggingIn}
+              variant="outline"
+            />
 
-              <View style={tailwind.style('flex-row items-center my-6')}>
-                <View style={tailwind.style('flex-1 h-px bg-gray-300')} />
-                <Animated.Text style={tailwind.style('px-4 text-sm text-gray-600')}>
-                  OR
-                </Animated.Text>
-                <View style={tailwind.style('flex-1 h-px bg-gray-300')} />
-              </View>
+            <View style={tailwind.style('flex-row items-center my-6')}>
+              <View style={tailwind.style('flex-1 h-px bg-koze-line')} />
+              <Animated.Text style={tailwind.style('px-4 text-sm text-koze-muted')}>
+                OR
+              </Animated.Text>
+              <View style={tailwind.style('flex-1 h-px bg-koze-line')} />
             </View>
-          )}
+          </View>
+        )}
 
+        <KozeCard style={tailwind.style('p-5')}>
           <Controller
             control={control}
             rules={{
@@ -174,24 +161,18 @@ const LoginScreen = () => {
               },
             }}
             render={({ field: { onChange, onBlur, value } }) => (
-              <View style={tailwind.style('pt-2 gap-2')}>
-                <Animated.Text style={tailwind.style('font-inter-420-20 text-gray-950')}>
+              <View style={tailwind.style('gap-2')}>
+                <Animated.Text style={tailwind.style('font-inter-420-20 text-koze-navy')}>
                   {i18n.t('LOGIN.EMAIL')}
                 </Animated.Text>
-                <TextInput
-                  style={[
-                    tailwind.style(
-                      'text-base font-inter-normal-20 tracking-[0.24px] leading-[20px] android:leading-[18px]',
-                      'py-2 px-3 rounded-xl text-gray-950 bg-blackA-A4',
-                      'h-10',
-                    ),
-                  ]}
+                <KozeTextInput
                   onBlur={onBlur}
                   onChangeText={onChange}
                   value={value}
-                  placeholderTextColor={tailwind.color('text-gray-900')}
+                  hasError={!!errors.email}
                   keyboardType="email-address"
                   autoCapitalize="none"
+                  autoComplete="email"
                 />
                 {errors.email && (
                   <Animated.Text style={tailwind.style('font-inter-normal-20 text-ruby-900')}>
@@ -213,33 +194,26 @@ const LoginScreen = () => {
               },
             }}
             render={({ field: { onChange, onBlur, value } }) => (
-              <View style={tailwind.style('pt-8 gap-2')}>
-                <Animated.Text style={tailwind.style('font-inter-420-20  text-gray-950')}>
+              <View style={tailwind.style('pt-5 gap-2')}>
+                <Animated.Text style={tailwind.style('font-inter-420-20 text-koze-navy')}>
                   {i18n.t('LOGIN.PASSWORD')}
                 </Animated.Text>
-                <View style={tailwind.style('relative')}>
-                  <TextInput
-                    style={[
-                      tailwind.style(
-                        'text-base font-inter-normal-20 tracking-[0.24px] leading-[20px] android:leading-[18px]',
-                        'py-2 pl-3 pr-10 rounded-xl text-gray-950 bg-blackA-A4',
-                        'h-10',
-                      ),
-                    ]}
-                    onBlur={onBlur}
-                    onChangeText={onChange}
-                    value={value}
-                    placeholderTextColor={tailwind.color('text-gray-500')}
-                    secureTextEntry={!showPassword}
-                  />
-                  <Pressable
-                    style={tailwind.style('absolute right-4 top-2.5')}
-                    onPress={() => setShowPassword(!showPassword)}>
-                    <Icon size={20} icon={showPassword ? <EyeIcon /> : <EyeSlash />} />
-                  </Pressable>
-                </View>
+                <KozeTextInput
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value}
+                  hasError={!!errors.password}
+                  secureTextEntry={!showPassword}
+                  autoCapitalize="none"
+                  autoComplete="password"
+                  rightAccessory={
+                    <Pressable hitSlop={8} onPress={() => setShowPassword(!showPassword)}>
+                      <Icon size={20} icon={showPassword ? <EyeIcon /> : <EyeSlash />} />
+                    </Pressable>
+                  }
+                />
                 {errors.password && (
-                  <Animated.Text style={tailwind.style('text-ruby-900')}>
+                  <Animated.Text style={tailwind.style('font-inter-normal-20 text-ruby-900')}>
                     {errors.password.message}
                   </Animated.Text>
                 )}
@@ -248,8 +222,8 @@ const LoginScreen = () => {
             name="password"
           />
 
-          <Pressable style={tailwind.style('pt-1 mb-8')} onPress={openResetPassword}>
-            <Animated.Text style={tailwind.style('text-blue-800 font-inter-medium-24 text-right')}>
+          <Pressable style={tailwind.style('pt-3 pb-6 self-end')} onPress={openResetPassword}>
+            <Animated.Text style={tailwind.style('text-blue-800 font-inter-medium-24')}>
               {i18n.t('LOGIN.FORGOT_PASSWORD')}
             </Animated.Text>
           </Pressable>
@@ -258,27 +232,27 @@ const LoginScreen = () => {
             text={isLoggingIn ? i18n.t('LOGIN.LOGIN_LOADING') : i18n.t('LOGIN.LOGIN')}
             handlePress={handleSubmit(onSubmit)}
           />
+        </KozeCard>
 
-          <Pressable
-            style={tailwind.style('flex-row justify-center items-center mt-6')}
-            onPress={() => navigation.navigate('Signup' as never)}>
-            <Animated.Text style={tailwind.style('text-sm text-gray-900')}>
-              {i18n.t('LOGIN.NO_ACCOUNT')}{' '}
-            </Animated.Text>
-            <Animated.Text style={tailwind.style('text-sm text-blue-800 font-inter-medium-24')}>
-              {i18n.t('LOGIN.CREATE_ACCOUNT')}
-            </Animated.Text>
-          </Pressable>
+        <Pressable
+          style={tailwind.style('flex-row justify-center items-center mt-6')}
+          onPress={() => navigation.navigate('Signup' as never)}>
+          <Animated.Text style={tailwind.style('text-sm text-koze-muted')}>
+            {i18n.t('LOGIN.NO_ACCOUNT')}{' '}
+          </Animated.Text>
+          <Animated.Text style={tailwind.style('text-sm text-blue-800 font-inter-medium-24')}>
+            {i18n.t('LOGIN.CREATE_ACCOUNT')}
+          </Animated.Text>
+        </Pressable>
 
-          <Pressable
-            style={tailwind.style('flex-row justify-center items-center mt-6')}
-            onPress={() => languagesModalSheetRef.current?.present()}>
-            <Animated.Text style={tailwind.style('text-sm text-gray-900')}>
-              {i18n.t('LOGIN.CHANGE_LANGUAGE')}
-            </Animated.Text>
-          </Pressable>
-        </KeyboardAwareScrollView>
-      </View>
+        <Pressable
+          style={tailwind.style('flex-row justify-center items-center mt-4')}
+          onPress={() => languagesModalSheetRef.current?.present()}>
+          <Animated.Text style={tailwind.style('text-sm text-koze-muted')}>
+            {i18n.t('LOGIN.CHANGE_LANGUAGE')}
+          </Animated.Text>
+        </Pressable>
+      </KeyboardAwareScrollView>
       <Sheet ref={languagesModalSheetRef} detents={[0.7]} scrollable>
         <ScrollView showsVerticalScrollIndicator={false}>
           <BottomSheetHeader headerText={i18n.t('SETTINGS.SET_LANGUAGE')} />

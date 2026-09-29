@@ -5,6 +5,7 @@ import Login from '@/screens/auth/LoginScreen';
 import ForgotPassword from '@/screens/auth/ForgotPassword';
 import MFAScreen from '@/screens/auth/MFAScreen';
 import Signup from '@/screens/auth/SignupScreen';
+import { KOZE_COLORS } from '@/theme/colors/koze';
 
 export type AuthStackParamList = {
   Login: undefined;
@@ -31,6 +32,8 @@ export const AuthStack = () => {
           headerBackTitle: 'Back',
           headerBackVisible: true,
           headerShadowVisible: false,
+          headerStyle: { backgroundColor: KOZE_COLORS.canvas },
+          headerTintColor: KOZE_COLORS.primary,
           title: '',
         }}
         name="ResetPassword"
@@ -42,6 +45,8 @@ export const AuthStack = () => {
           headerBackTitle: 'Back',
           headerBackVisible: true,
           headerShadowVisible: false,
+          headerStyle: { backgroundColor: KOZE_COLORS.canvas },
+          headerTintColor: KOZE_COLORS.primary,
           title: '',
         }}
         name="Signup"
@@ -53,6 +58,8 @@ export const AuthStack = () => {
           headerBackTitle: 'Back',
           headerBackVisible: true,
           headerShadowVisible: false,
+          headerStyle: { backgroundColor: KOZE_COLORS.canvas },
+          headerTintColor: KOZE_COLORS.primary,
           title: '',
         }}
         name="MFAScreen"

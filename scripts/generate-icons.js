@@ -58,6 +58,8 @@ render(squareSvg(0.72, '#ffffff'), 1024, 'assets/icon.png');
 render(squareSvg(0.55, null), 1024, 'assets/adaptive-icon.png');
 // Splash: full logo with text, centered on white.
 render(fullLogoOnCanvas(1284, 2778, 520, '#ffffff'), 1284, 'assets/splash.png');
+// Empty states: the mark alone, transparent, 3x of 80x80 dp.
+render(squareSvg(1, null), 240, 'src/assets/images/logo-mark.png');
 // Login screen logo: full logo cropped to its content (412x500), transparent, 3x of 80x97 dp.
 render(
   src.replace('viewBox="0 0 512 600" width="100%" height="100%"', 'viewBox="50 10 412 500"'),
