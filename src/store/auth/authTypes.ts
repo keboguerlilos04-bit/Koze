@@ -45,6 +45,8 @@ export interface SignupPayload {
   account_name: string;
   email: string;
   password: string;
+  // Owner's MonCash number for inbox billing, e.g. +50937123456.
+  moncash_number: string;
   locale?: string;
 }
 export interface ResetPasswordResponse {

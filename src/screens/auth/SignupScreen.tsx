@@ -20,8 +20,13 @@ type FormData = {
   fullName: string;
   companyName: string;
   email: string;
+  moncash: string;
   password: string;
 };
+
+// The 8 digits after +509, spaces and dashes allowed while typing.
+const MONCASH_DIGITS_REGEX = /^\d{8}$/;
+const moncashDigits = (value: string) => value.replace(/[\s-]/g, '');
 
 interface FormFieldProps {
   control: Control<FormData>;
@@ -31,7 +36,9 @@ interface FormFieldProps {
   error?: FieldError;
   keyboardType?: KeyboardTypeOptions;
   autoCapitalize?: 'none' | 'words';
-  autoComplete?: 'name' | 'organization' | 'email' | 'new-password';
+  autoComplete?: 'name' | 'organization' | 'email' | 'new-password' | 'tel';
+  prefix?: string;
+  hint?: string;
   isFirst?: boolean;
 }
 
@@ -44,6 +51,8 @@ const FormField = ({
   keyboardType,
   autoCapitalize = 'none',
   autoComplete,
+  prefix,
+  hint,
   isFirst = false,
 }: FormFieldProps) => (
   <Controller
@@ -60,15 +69,20 @@ const FormField = ({
           onChangeText={onChange}
           value={value}
           hasError={!!error}
+          prefix={prefix}
           keyboardType={keyboardType}
           autoCapitalize={autoCapitalize}
           autoComplete={autoComplete}
         />
-        {error && (
+        {error ? (
           <Animated.Text style={tailwind.style('font-inter-normal-20 text-ruby-900')}>
             {error.message}
           </Animated.Text>
-        )}
+        ) : hint ? (
+          <Animated.Text style={tailwind.style('text-sm font-inter-normal-20 text-koze-muted')}>
+            {hint}
+          </Animated.Text>
+        ) : null}
       </View>
     )}
   />
@@ -86,7 +100,7 @@ const SignupScreen = () => {
     handleSubmit,
     formState: { errors },
   } = useForm<FormData>({
-    defaultValues: { fullName: '', companyName: '', email: '', password: '' },
+    defaultValues: { fullName: '', companyName: '', email: '', moncash: '', password: '' },
   });
 
   const onSubmit = async (data: FormData) => {
@@ -99,6 +113,7 @@ const SignupScreen = () => {
           account_name: data.companyName.trim(),
           email: data.email.trim().toLowerCase(),
           password: data.password,
+          moncash_number: `+509${moncashDigits(data.moncash)}`,
           locale: activeLocale,
         }),
       ).unwrap();
@@ -159,6 +174,21 @@ const SignupScreen = () => {
             error={errors.email}
             keyboardType="email-address"
             autoComplete="email"
+          />
+
+          <FormField
+            control={control}
+            name="moncash"
+            label={i18n.t('SIGNUP.MONCASH')}
+            prefix="+509"
+            hint={i18n.t('SIGNUP.MONCASH_HINT')}
+            rules={{
+              validate: value =>
+                MONCASH_DIGITS_REGEX.test(moncashDigits(value)) || i18n.t('SIGNUP.MONCASH_ERROR'),
+            }}
+            error={errors.moncash}
+            keyboardType="phone-pad"
+            autoComplete="tel"
           />
 
           <Controller

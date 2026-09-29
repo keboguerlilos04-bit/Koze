@@ -12,6 +12,11 @@ L'application sait déjà gérer les conversations d'une entreprise. Pour foncti
 
 | Date | Travail | Détail |
 | --- | --- | --- |
+| 29 sept. | Nouvelle navigation | 4 onglets (Conversations, Boîtes, Rapports pour les administrateurs, Réglages) ; notifications derrière une cloche ; en-tête compact avec le logo |
+| 29 sept. | Paiement MonCash (simulé) | 1 500 HTG par boîte et par mois ; numéro MonCash demandé à l'inscription ; le serveur refuse une boîte non payée |
+| 29 sept. | Nouvelle conversation WhatsApp | Bouton « + » flottant : numéro du client et modèle WhatsApp approuvé |
+| 29 sept. | Rapports | Conversations ouvertes, activité sur 7 ou 30 jours, temps de réponse |
+| 28 sept. | Nouvelle identité visuelle | Couleurs Koze, cartes, champs et états vides aux couleurs de Koze |
 | 27 sept. | Administration dans l'application | Le propriétaire ajoute ses agents (mot de passe temporaire), crée ses boîtes Telegram et WhatsApp et choisit qui y répond ; invisible pour les agents |
 | 27 sept. | Confirmation automatique | En attendant SMTP, les nouveaux comptes sont confirmés automatiquement |
 | 27 sept. | Inscription en libre-service | Écran « Créer un compte » (nom complet, entreprise, e-mail, mot de passe) ; crée l'utilisateur et le compte de l'entreprise, puis connecte automatiquement |
@@ -55,7 +60,8 @@ En attendant SMTP, les nouveaux comptes sont confirmés automatiquement : un ins
 | Pas sur le Play Store | Installation manuelle de l'APK (« sources inconnues ») | Compte Google Play (25 $), build `production` (.aab) |
 | Anglais par défaut | Les écrans affichent « Create an account » tant que l'utilisateur n'a pas choisi le français | Mettre le français par défaut |
 | Configuration limitée dans l'application | Site web, e-mail, Facebook et Instagram, équipes, étiquettes et réponses prédéfinies se configurent uniquement sur le site web | Ajouter d'autres écrans selon les besoins |
-| Pas de facturation | Aucun abonnement ni paiement pour les clients | À concevoir |
+| MonCash simulé | Le paiement de 1 500 HTG par boîte est simulé : aucun argent n'est prélevé | Compte marchand MonCash Business et ses clés API |
+| Pas de renouvellement | Une boîte payée n'est pas bloquée après 30 jours | Renouvellement mensuel à développer |
 | Inscription ouverte | N'importe qui peut créer un compte ; pas de captcha | Ajouter hCaptcha ou une validation manuelle |
 
 La machine de développement a environ 5 Go d'espace libre et peu de RAM : les builds se font dans le cloud Expo.

@@ -66,6 +66,9 @@ export const AllVariants: Story = {
           onLeftIconPress={() => {}}
           onRightIconPress={() => {}}
           onClearFilter={() => {}}
+          unreadNotificationsCount={3}
+          onSearchPress={() => {}}
+          onNotificationsPress={() => {}}
         />
       </HeaderContainer>
       <Title title="Selected All" />
@@ -77,6 +80,9 @@ export const AllVariants: Story = {
           onLeftIconPress={() => {}}
           onRightIconPress={() => {}}
           onClearFilter={() => {}}
+          unreadNotificationsCount={3}
+          onSearchPress={() => {}}
+          onNotificationsPress={() => {}}
         />
       </HeaderContainer>
 
@@ -89,6 +95,9 @@ export const AllVariants: Story = {
           onLeftIconPress={() => {}}
           onRightIconPress={() => {}}
           onClearFilter={() => {}}
+          unreadNotificationsCount={3}
+          onSearchPress={() => {}}
+          onNotificationsPress={() => {}}
         />
       </HeaderContainer>
 
@@ -101,6 +110,9 @@ export const AllVariants: Story = {
           onLeftIconPress={() => {}}
           onRightIconPress={() => {}}
           onClearFilter={() => {}}
+          unreadNotificationsCount={3}
+          onSearchPress={() => {}}
+          onNotificationsPress={() => {}}
         />
       </HeaderContainer>
 
@@ -113,6 +125,9 @@ export const AllVariants: Story = {
           onLeftIconPress={() => {}}
           onRightIconPress={() => {}}
           onClearFilter={() => {}}
+          unreadNotificationsCount={3}
+          onSearchPress={() => {}}
+          onNotificationsPress={() => {}}
         />
       </HeaderContainer>
 
@@ -125,6 +140,9 @@ export const AllVariants: Story = {
           onLeftIconPress={() => {}}
           onRightIconPress={() => {}}
           onClearFilter={() => {}}
+          unreadNotificationsCount={3}
+          onSearchPress={() => {}}
+          onNotificationsPress={() => {}}
         />
       </HeaderContainer>
     </ScrollView>

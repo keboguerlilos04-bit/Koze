@@ -17,6 +17,8 @@ import {
   ConversationIconOutline,
   InboxIconFilled,
   InboxIconOutline,
+  ReportsIconFilled,
+  ReportsIconOutline,
   SettingsIconFilled,
   SettingsIconOutline,
 } from '@/svg-icons';
@@ -38,8 +40,10 @@ const TabBarIcons = ({ focused, route }: TabBarIconsProps) => {
   switch (route.name) {
     case 'Conversations':
       return focused ? <ConversationIconFilled /> : <ConversationIconOutline />;
-    case 'Inbox':
+    case 'Inboxes':
       return focused ? <InboxIconFilled /> : <InboxIconOutline />;
+    case 'Reports':
+      return focused ? <ReportsIconFilled /> : <ReportsIconOutline />;
     case 'Settings':
       return focused ? <SettingsIconFilled /> : <SettingsIconOutline />;
   }
@@ -159,13 +163,13 @@ export const BottomTabBar = ({ state, descriptors, navigation }: BottomTabBarPro
       style={Platform.select({
         ios: [
           tailwind.style(
-            'flex flex-row absolute w-full bottom-0 pl-[72px] pr-[71px] pt-[11px] pb-8 bg-[#00000009]',
+            'flex flex-row absolute w-full bottom-0 px-6 pt-[11px] pb-8 bg-[#00000009]',
             `h-[${tabBarHeight}px]`,
           ),
         ],
         android: [
           tailwind.style(
-            'flex flex-row absolute w-full bottom-0 pl-[72px] pr-[71px] pt-[11px] bg-white',
+            'flex flex-row absolute w-full bottom-0 px-6 pt-[11px] bg-white',
             `h-[${tabBarHeight}px] pb-[${bottom + 11}px]`,
           ),
         ],

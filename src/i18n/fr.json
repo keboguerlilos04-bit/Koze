@@ -43,6 +43,9 @@
     "CHANGE_URL": "Modifier l'URL"
   },
   "SIGNUP": {
+    "MONCASH": "Numéro MonCash",
+    "MONCASH_HINT": "Sert à payer vos boîtes de réception : 1 500 HTG par boîte et par mois.",
+    "MONCASH_ERROR": "Entrez les 8 chiffres de votre numéro MonCash",
     "TITLE": "Créez votre compte Koze",
     "DESCRIPTION": "Configurez votre entreprise en une minute. Votre boîte de réception d'équipe est prête dès l'inscription.",
     "FULL_NAME": "Nom complet",
@@ -105,6 +108,70 @@
     "SAVE": "Enregistrer",
     "SAVING": "Enregistrement...",
     "SAVED": "Enregistré"
+  },
+  "KOZE_NAV": {
+    "NOTIFICATIONS": "Notifications",
+    "NEW_CONVERSATION": "Nouvelle conversation"
+  },
+  "INBOXES": {
+    "TITLE": "Boîtes de réception",
+    "DESCRIPTION_OWNER": "Les canaux où vos clients vous écrivent. Touchez une boîte pour choisir qui y répond.",
+    "DESCRIPTION_AGENT": "Les canaux auxquels vous répondez.",
+    "ADD": "Ajouter une boîte",
+    "EMPTY_OWNER": "Aucune boîte de réception. Ajoutez WhatsApp ou Telegram pour recevoir des messages.",
+    "EMPTY_AGENT": "Vous n'êtes assigné à aucune boîte. Demandez au propriétaire du compte."
+  },
+  "PAYWALL": {
+    "ADD_NUMBER": "Ajoutez le numéro MonCash qui paiera vos boîtes de réception.",
+    "SAVE_NUMBER": "Enregistrer le numéro",
+    "TITLE": "Ajouter une boîte",
+    "SUBTITLE": "Chaque boîte de réception se paie chaque mois avec MonCash.",
+    "RECEIPT": "Reçu",
+    "ITEM": "Boîte de réception (WhatsApp ou Telegram)",
+    "PRICE": "{{price}} HTG / boîte / mois",
+    "PERIOD": "Durée",
+    "PERIOD_VALUE": "{{days}} jours",
+    "MONCASH_NUMBER": "Numéro MonCash",
+    "NO_NUMBER": "Aucun numéro MonCash sur ce compte",
+    "TOTAL": "Total",
+    "PAY": "Payer {{price}} HTG avec MonCash",
+    "PAYING": "Paiement en cours...",
+    "SIMULATED": "Mode test : les paiements sont simulés, aucun argent n'est prélevé.",
+    "SUCCESS": "Paiement confirmé",
+    "FAILED": "Le paiement n'a pas abouti. Veuillez réessayer.",
+    "CREDIT_AVAILABLE": "Vous avez une boîte payée prête à configurer.",
+    "CHOOSE_CHANNEL": "Choisissez le canal de votre nouvelle boîte"
+  },
+  "REPORTS": {
+    "TITLE": "Rapports",
+    "PERIOD_7": "7 jours",
+    "PERIOD_30": "30 jours",
+    "OPEN_NOW": "Ouvertes en ce moment",
+    "MINE": "Les miennes",
+    "UNASSIGNED": "Non assignées",
+    "ALL": "Toutes",
+    "ACTIVITY": "Activité",
+    "CONVERSATIONS": "Conversations",
+    "INCOMING": "Messages reçus",
+    "OUTGOING": "Messages envoyés",
+    "RESOLVED": "Résolues",
+    "FIRST_RESPONSE": "Première réponse moyenne",
+    "RESOLUTION_TIME": "Temps de résolution moyen",
+    "PREVIOUS": "Période précédente : {{value}}"
+  },
+  "NEW_CONVERSATION": {
+    "TITLE": "Nouvelle conversation WhatsApp",
+    "INBOX": "Boîte WhatsApp",
+    "PHONE": "Numéro du client",
+    "PHONE_HINT": "Format international, ex. +50937000000",
+    "PHONE_ERROR": "Utilisez le format international, ex. +50937000000",
+    "NAME": "Nom du client (facultatif)",
+    "TEMPLATE": "Premier message",
+    "TEMPLATE_HINT": "WhatsApp exige un modèle approuvé pour le premier message à un client.",
+    "CHOOSE_TEMPLATE": "Choisir un modèle",
+    "NO_WHATSAPP": "Ajoutez d'abord une boîte WhatsApp pour démarrer des conversations.",
+    "NO_TEMPLATES": "Cette boîte n'a pas encore de modèle approuvé. Créez-en un dans Meta Business Suite, puis réessayez.",
+    "STARTED": "Conversation démarrée"
   },
   "FORGOT_PASSWORD": {
     "EMAIL": "Veuillez saisir votre adresse de courriel",

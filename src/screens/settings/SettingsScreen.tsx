@@ -35,7 +35,6 @@ import { LANGUAGES } from '@/constants';
 import { useRefsContext } from '@/context';
 import {
   ChatwootIcon,
-  InboxFilterIcon,
   NotificationIcon,
   SwitchIcon,
   TeamIcon,
@@ -241,7 +240,7 @@ const SettingsScreen = () => {
     },
   ];
 
-  // Koze: only the account owner manages agents and inboxes from the app.
+  // Koze: only the account owner manages the team from the app (inboxes have their own tab).
   const isAccountOwner = useAppSelector(selectIsAccountOwner);
   const adminList: GenericListType[] = [
     {
@@ -251,14 +250,6 @@ const SettingsScreen = () => {
       subtitle: '',
       subtitleType: 'light',
       onPressListItem: () => navigation.navigate('AdminAgents' as never),
-    },
-    {
-      hasChevron: true,
-      title: i18n.t('ADMIN.INBOXES'),
-      icon: <InboxFilterIcon />,
-      subtitle: '',
-      subtitleType: 'light',
-      onPressListItem: () => navigation.navigate('AdminInboxes' as never),
     },
   ];
 

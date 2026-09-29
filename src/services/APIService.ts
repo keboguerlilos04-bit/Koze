@@ -95,9 +95,11 @@ class APIService {
         const state = store.getState();
         config.baseURL = state.settings?.installationUrl;
         const accountId = state.auth.user?.account_id;
-        if (accountId && config.url && !nonAccountRoutes.includes(config.url)) {
+        // Koze: a full path (e.g. api/v2/accounts/1/reports/summary) is sent as is.
+        const isFullPath = config.url?.startsWith('api/') ?? false;
+        if (!isFullPath && accountId && config.url && !nonAccountRoutes.includes(config.url)) {
           config.url = `api/v1/accounts/${accountId}/${config.url}`;
-        } else if (nonAccountRoutes.includes(config.url || '')) {
+        } else if (!isFullPath && nonAccountRoutes.includes(config.url || '')) {
           config.url = `api/v1/${config.url}`;
         }
         return {

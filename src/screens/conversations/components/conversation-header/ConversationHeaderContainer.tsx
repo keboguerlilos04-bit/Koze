@@ -23,6 +23,7 @@ import {
   selectSelectedConversations,
 } from '@/store/conversation/conversationSelectedSlice';
 import { selectCurrentState, setCurrentState } from '@/store/conversation/conversationHeaderSlice';
+import { selectNotificationsMetadata } from '@/store/notification/notificationSelectors';
 import { ConversationFilterBar } from '../conversation-filters';
 import { ConversationHeaderPresenter } from './ConversationHeaderPresenter';
 
@@ -56,6 +57,7 @@ export const ConversationHeader = () => {
   );
 
   const selectedConversations = useAppSelector(selectSelectedConversations);
+  const { unreadCount: unreadNotificationsCount } = useAppSelector(selectNotificationsMetadata);
 
   const isSelectedAll = useMemo(
     () => selectedConversations.length === allConversations.length,
@@ -94,11 +96,16 @@ export const ConversationHeader = () => {
       } else {
         dispatch(selectAll(allConversations));
       }
-    } else {
-      // Navigate to search screen
-      const pushToSearchScreen = StackActions.push('SearchScreen');
-      navigation.dispatch(pushToSearchScreen);
     }
+  };
+
+  const handleSearchPress = () => {
+    navigation.dispatch(StackActions.push('SearchScreen'));
+  };
+
+  // Koze: notifications moved from their own tab to the bell in this header.
+  const handleNotificationsPress = () => {
+    navigation.dispatch(StackActions.push('Notifications'));
   };
 
   const handleRightIconPress = () => {
@@ -129,6 +136,9 @@ export const ConversationHeader = () => {
         currentState={currentState}
         isSelectedAll={isSelectedAll}
         filtersAppliedCount={filtersAppliedCount}
+        unreadNotificationsCount={unreadNotificationsCount}
+        onSearchPress={handleSearchPress}
+        onNotificationsPress={handleNotificationsPress}
         onLeftIconPress={handleLeftIconPress}
         onRightIconPress={handleRightIconPress}
         onClearFilter={handleClearFilter}

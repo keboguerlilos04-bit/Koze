@@ -47,6 +47,9 @@
     "CHANGE_URL": "Change URL"
   },
   "SIGNUP": {
+    "MONCASH": "MonCash number",
+    "MONCASH_HINT": "Used to pay for your inboxes: 1,500 HTG per inbox per month.",
+    "MONCASH_ERROR": "Enter the 8 digits of your MonCash number",
     "TITLE": "Create your Koze account",
     "DESCRIPTION": "Set up your business in a minute. Your team inbox is ready as soon as you sign up.",
     "FULL_NAME": "Full name",
@@ -109,6 +112,70 @@
     "SAVE": "Save",
     "SAVING": "Saving...",
     "SAVED": "Saved"
+  },
+  "KOZE_NAV": {
+    "NOTIFICATIONS": "Notifications",
+    "NEW_CONVERSATION": "New conversation"
+  },
+  "INBOXES": {
+    "TITLE": "Inboxes",
+    "DESCRIPTION_OWNER": "The channels where your customers write to you. Tap an inbox to choose who answers it.",
+    "DESCRIPTION_AGENT": "The channels you answer.",
+    "ADD": "Add an inbox",
+    "EMPTY_OWNER": "No inboxes yet. Add WhatsApp or Telegram to start receiving messages.",
+    "EMPTY_AGENT": "You are not assigned to an inbox yet. Ask the account owner."
+  },
+  "PAYWALL": {
+    "ADD_NUMBER": "Add the MonCash number that will pay for your inboxes.",
+    "SAVE_NUMBER": "Save the number",
+    "TITLE": "Add an inbox",
+    "SUBTITLE": "Each inbox is paid every month with MonCash.",
+    "RECEIPT": "Receipt",
+    "ITEM": "Inbox (WhatsApp or Telegram)",
+    "PRICE": "{{price}} HTG / inbox / month",
+    "PERIOD": "Duration",
+    "PERIOD_VALUE": "{{days}} days",
+    "MONCASH_NUMBER": "MonCash number",
+    "NO_NUMBER": "No MonCash number on this account",
+    "TOTAL": "Total",
+    "PAY": "Pay {{price}} HTG with MonCash",
+    "PAYING": "Payment in progress...",
+    "SIMULATED": "Test mode: payments are simulated, no money is charged.",
+    "SUCCESS": "Payment confirmed",
+    "FAILED": "The payment did not go through. Please try again.",
+    "CREDIT_AVAILABLE": "You have a paid inbox ready to set up.",
+    "CHOOSE_CHANNEL": "Choose the channel for your new inbox"
+  },
+  "REPORTS": {
+    "TITLE": "Reports",
+    "PERIOD_7": "7 days",
+    "PERIOD_30": "30 days",
+    "OPEN_NOW": "Open right now",
+    "MINE": "Mine",
+    "UNASSIGNED": "Unassigned",
+    "ALL": "All",
+    "ACTIVITY": "Activity",
+    "CONVERSATIONS": "Conversations",
+    "INCOMING": "Messages received",
+    "OUTGOING": "Messages sent",
+    "RESOLVED": "Resolved",
+    "FIRST_RESPONSE": "Average first response",
+    "RESOLUTION_TIME": "Average resolution time",
+    "PREVIOUS": "Previous period: {{value}}"
+  },
+  "NEW_CONVERSATION": {
+    "TITLE": "New WhatsApp conversation",
+    "INBOX": "WhatsApp inbox",
+    "PHONE": "Customer phone number",
+    "PHONE_HINT": "International format, e.g. +50937000000",
+    "PHONE_ERROR": "Use the international format, e.g. +50937000000",
+    "NAME": "Customer name (optional)",
+    "TEMPLATE": "First message",
+    "TEMPLATE_HINT": "WhatsApp requires an approved template for the first message to a customer.",
+    "CHOOSE_TEMPLATE": "Choose a template",
+    "NO_WHATSAPP": "Add a WhatsApp inbox first to start conversations.",
+    "NO_TEMPLATES": "This inbox has no approved template yet. Create one in Meta Business Suite, then try again.",
+    "STARTED": "Conversation started"
   },
   "FORGOT_PASSWORD": {
     "EMAIL": "Please enter your email",

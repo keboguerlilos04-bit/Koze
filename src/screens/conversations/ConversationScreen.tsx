@@ -16,7 +16,7 @@ import {
 import { ActionTabs } from '@/components-next';
 import { Sheet } from '@/components-next/common/sheet/Sheet';
 
-import { KozeEmptyState } from '@/components-next';
+import { KozeEmptyState, KozeFab } from '@/components-next';
 import { SCREENS, LAST_ACTIVE_TIMESTAMP_KEY, LAST_ACTIVE_TIMESTAMP_THRESHOLD } from '@/constants';
 import {
   ConversationListStateProvider,
@@ -29,8 +29,10 @@ import { Conversation } from '@/types';
 import { useAppDispatch, useAppSelector } from '@/hooks';
 import {
   selectBottomSheetState,
+  selectCurrentState,
   setBottomSheetState,
 } from '@/store/conversation/conversationHeaderSlice';
+import { StackActions, useNavigation } from '@react-navigation/native';
 import { resetActionState } from '@/store/conversation/conversationActionSlice';
 import { conversationActions } from '@/store/conversation/conversationActions';
 import {
@@ -246,6 +248,23 @@ const ConversationList = () => {
   );
 };
 
+// Koze: the floating "+" starts a new WhatsApp conversation. Hidden while selecting
+// conversations, when the action bar takes the bottom of the screen.
+const NewConversationFab = () => {
+  const navigation = useNavigation();
+  const headerState = useAppSelector(selectCurrentState);
+  const tabBarHeight = useTabBarHeight();
+
+  if (headerState === 'Select') return null;
+  return (
+    <KozeFab
+      accessibilityLabel={i18n.t('KOZE_NAV.NEW_CONVERSATION')}
+      bottomOffset={tabBarHeight + 16}
+      onPress={() => navigation.dispatch(StackActions.push('NewConversation'))}
+    />
+  );
+};
+
 const ConversationScreen = () => {
   const currentBottomSheet = useAppSelector(selectBottomSheetState);
   const dispatch = useAppDispatch();
@@ -290,6 +309,7 @@ const ConversationScreen = () => {
           layout={LinearTransition.springify().damping(22).stiffness(180)}>
           <ConversationList />
         </Animated.View>
+        <NewConversationFab />
         <Sheet
           ref={filtersModalSheetRef}
           height={isInbox ? undefined : filterHeight}

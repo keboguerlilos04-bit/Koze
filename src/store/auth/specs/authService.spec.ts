@@ -68,6 +68,7 @@ describe('AuthService', () => {
       account_name: 'Boutik Jean',
       email: 'jean@example.com',
       password: 'Koze#2026',
+      moncash_number: '+50937123456',
       locale: 'fr',
     };
 

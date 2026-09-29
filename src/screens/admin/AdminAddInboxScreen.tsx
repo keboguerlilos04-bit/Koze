@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { AxiosError } from 'axios';
 import { Animated, View } from 'react-native';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -12,7 +13,7 @@ import { Button } from '@/components-next';
 import { showToast } from '@/utils/toastUtils';
 import { inboxActions } from '@/store/inbox/inboxActions';
 import { AdminService, showAdminError } from '@/store/admin/adminService';
-import type { SettingsStackParamList } from '@/navigation/stack/SettingsStack';
+import type { InboxesStackParamList } from '@/navigation/stack/InboxesStack';
 import { AdminTextField } from './components/AdminTextField';
 
 type Fields = {
@@ -39,8 +40,8 @@ const PHONE_REGEX = /^\+\d{8,15}$/;
 
 // Koze: creates a Telegram or WhatsApp (Cloud API) inbox, then opens its agent picker.
 const AdminAddInboxScreen = () => {
-  const navigation = useNavigation<NativeStackNavigationProp<SettingsStackParamList>>();
-  const { channel } = useRoute<RouteProp<SettingsStackParamList, 'AdminAddInbox'>>().params;
+  const navigation = useNavigation<NativeStackNavigationProp<InboxesStackParamList>>();
+  const { channel } = useRoute<RouteProp<InboxesStackParamList, 'AdminAddInbox'>>().params;
   const dispatch = useAppDispatch();
   const isTelegram = channel === 'telegram';
   const [fields, setFields] = useState<Fields>(EMPTY_FIELDS);
@@ -87,6 +88,10 @@ const AdminAddInboxScreen = () => {
       navigation.replace('AdminInboxAgents', { inboxId, inboxName: name });
     } catch (error) {
       showAdminError(error);
+      // 402: no paid credit left (e.g. used meanwhile), so go back to the MonCash paywall.
+      if ((error as AxiosError).response?.status === 402) {
+        navigation.replace('MonCashPaywall');
+      }
     } finally {
       setIsSaving(false);
     }

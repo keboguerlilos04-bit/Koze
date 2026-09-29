@@ -42,3 +42,17 @@ typed at signup instead of renaming the account after the email domain's website
 `POST /api/v1/accounts/:account_id/koze_agents { name, email, password }`. Only the
 account owner (the administrator nobody invited) may call it. It creates the agent
 with the temporary password the owner chose, so no invitation email is needed.
+
+## MonCash inbox billing
+
+Each new inbox costs 1,500 HTG for 30 days. `koze_payments_controller.rb` adds:
+
+- `GET /api/v1/accounts/:id/koze_payments`: price, MonCash number, unused paid credits
+- `POST /api/v1/accounts/:id/koze_payments` then `POST .../koze_payments/:payment_id/confirm`
+- `PATCH /api/v1/accounts/:id/koze_payments/moncash`: set the MonCash number
+
+Signup requires `moncash_number` (+509 and 8 digits). Creating an inbox without an
+unused paid credit is refused with 402, so the paywall cannot be skipped through the API.
+Payments are **simulated** (`KozeBilling::SimulatedGateway` in `koze_overrides.rb`, every
+payment succeeds). With MonCash merchant keys, replace it with a gateway that calls the
+MonCash REST API (CreatePayment for the redirect URL, RetrieveOrderPayment for the status).

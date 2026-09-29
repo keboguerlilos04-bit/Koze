@@ -1,5 +1,5 @@
 import React from 'react';
-import { Pressable, Text, ViewStyle } from 'react-native';
+import { Image, Pressable, Text, ViewStyle } from 'react-native';
 import Animated, {
   AnimatedStyle,
   useAnimatedStyle,
@@ -8,7 +8,14 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import { Icon } from '@/components-next/common';
-import { CheckedIcon, CloseIcon, FilterIcon, UncheckedIcon, SearchIcon } from '@/svg-icons';
+import {
+  CheckedIcon,
+  CloseIcon,
+  FilterIcon,
+  NotificationIcon,
+  UncheckedIcon,
+  SearchIcon,
+} from '@/svg-icons';
 import { tailwind } from '@/theme';
 import i18n from '@/i18n';
 import { useScaleAnimation } from '@/utils';
@@ -20,15 +27,21 @@ type ConversationHeaderPresenterProps = {
   currentState: HeaderState;
   isSelectedAll: boolean;
   filtersAppliedCount: number;
+  unreadNotificationsCount: number;
   onLeftIconPress: () => void;
   onRightIconPress: () => void;
   onClearFilter: () => void;
+  onSearchPress: () => void;
+  onNotificationsPress: () => void;
 };
 
 type RightSectionProps = {
   currentState: HeaderState;
   filtersAppliedCount: number;
+  unreadNotificationsCount: number;
   onRightIconPress: () => void;
+  onSearchPress: () => void;
+  onNotificationsPress: () => void;
 };
 
 type LeftSlotProps = {
@@ -41,13 +54,19 @@ type LeftSlotProps = {
   animatedStyle: ViewStyle | AnimatedStyle<ViewStyle>;
 };
 
-const HeaderTitle = () => (
-  <Animated.View style={tailwind.style('flex-2')}>
+// Koze brand block: the Koze mark next to the screen title.
+const Brand = () => (
+  <Animated.View style={tailwind.style('flex-row items-center gap-2')}>
+    <Image
+      // eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-require-imports
+      source={require('@/assets/images/logo-mark.png')}
+      style={tailwind.style('w-7 h-7')}
+      resizeMode="contain"
+      accessibilityLabel="Koze"
+    />
     <Text
       numberOfLines={1}
-      style={tailwind.style(
-        'text-[17px] font-inter-medium-24 tracking-[0.32px] leading-[17px] text-center text-gray-950',
-      )}>
+      style={tailwind.style('text-[17px] leading-[20px] font-inter-580-24 text-koze-navy')}>
       {i18n.t('CONVERSATION.HEADER.TITLE')}
     </Text>
   </Animated.View>
@@ -64,17 +83,17 @@ const LeftSlot = ({
   handlers,
   animatedStyle,
 }: LeftSlotProps) => {
-  const searchActive = currentState === 'none';
+  const brandActive = currentState === 'none';
   const clearActive = currentState === 'Filter';
   const selectActive = currentState === 'Select';
 
-  const searchOpacity = useDerivedValue(
+  const brandOpacity = useDerivedValue(
     () =>
       withDelay(
-        searchActive ? CROSSFADE_MS : 0,
-        withTiming(searchActive ? 1 : 0, { duration: CROSSFADE_MS }),
+        brandActive ? CROSSFADE_MS : 0,
+        withTiming(brandActive ? 1 : 0, { duration: CROSSFADE_MS }),
       ),
-    [searchActive],
+    [brandActive],
   );
   const clearOpacity = useDerivedValue(
     () =>
@@ -93,18 +112,16 @@ const LeftSlot = ({
     [selectActive],
   );
 
-  const searchStyle = useAnimatedStyle(() => ({ opacity: searchOpacity.value }));
+  const brandStyle = useAnimatedStyle(() => ({ opacity: brandOpacity.value }));
   const clearStyle = useAnimatedStyle(() => ({ opacity: clearOpacity.value }));
   const selectStyle = useAnimatedStyle(() => ({ opacity: selectOpacity.value }));
 
   return (
-    <Animated.View style={tailwind.style('flex-1 h-6')}>
+    <Animated.View style={tailwind.style('flex-1 h-8')}>
       <Animated.View
-        style={[tailwind.style('absolute inset-0 flex-row items-center'), searchStyle]}
-        pointerEvents={searchActive ? 'auto' : 'none'}>
-        <Pressable onPress={onLeftIconPress} hitSlop={16}>
-          <Icon size={24} icon={<SearchIcon stroke={tailwind.color('text-gray-800')} />} />
-        </Pressable>
+        style={[tailwind.style('absolute inset-0 flex-row items-center'), brandStyle]}
+        pointerEvents="none">
+        <Brand />
       </Animated.View>
 
       <Animated.View
@@ -144,17 +161,56 @@ const LeftSlot = ({
   );
 };
 
+// A small Koze-teal count on the bell, capped at 99+.
+const Badge = ({ count }: { count: number }) => (
+  <Animated.View
+    style={tailwind.style(
+      'absolute z-10 -top-1 -right-1.5 min-w-[18px] h-[18px] px-1 rounded-full',
+      'bg-blue-800 items-center justify-center',
+    )}>
+    <Text style={tailwind.style('text-[11px] leading-[13px] font-inter-580-24 text-white')}>
+      {count > 99 ? '99+' : count}
+    </Text>
+  </Animated.View>
+);
+
 const RightSection = ({
   currentState,
   filtersAppliedCount,
+  unreadNotificationsCount,
   onRightIconPress,
+  onSearchPress,
+  onNotificationsPress,
 }: RightSectionProps) => {
   const { entering, exiting } = useHeaderAnimation();
+  const isOpen = currentState === 'Filter' || currentState === 'Select';
 
   return (
-    <Animated.View style={tailwind.style('flex-1 items-end')}>
-      <Pressable onPress={onRightIconPress} hitSlop={16}>
-        {currentState === 'Filter' || currentState === 'Select' ? (
+    <Animated.View style={tailwind.style('flex-row items-center gap-5')}>
+      {!isOpen && (
+        <Animated.View
+          style={tailwind.style('flex-row items-center gap-5')}
+          exiting={exiting}
+          entering={entering}>
+          <Pressable
+            onPress={onSearchPress}
+            hitSlop={12}
+            accessibilityRole="button"
+            accessibilityLabel="Search">
+            <Icon size={24} icon={<SearchIcon stroke={tailwind.color('text-gray-800')} />} />
+          </Pressable>
+          <Pressable
+            onPress={onNotificationsPress}
+            hitSlop={12}
+            accessibilityRole="button"
+            accessibilityLabel={i18n.t('KOZE_NAV.NOTIFICATIONS')}>
+            {unreadNotificationsCount > 0 && <Badge count={unreadNotificationsCount} />}
+            <Icon size={24} icon={<NotificationIcon />} />
+          </Pressable>
+        </Animated.View>
+      )}
+      <Pressable onPress={onRightIconPress} hitSlop={12} accessibilityRole="button">
+        {isOpen ? (
           <Animated.View exiting={exiting} entering={entering}>
             <Icon size={24} icon={<CloseIcon />} />
           </Animated.View>
@@ -175,19 +231,24 @@ const RightSection = ({
   );
 };
 
+// Koze: compact header — brand on the left; search, notifications and the filter menu
+// (all / unassigned / mine, status, sort) on the right.
 export const ConversationHeaderPresenter = ({
   currentState,
   isSelectedAll,
   filtersAppliedCount,
+  unreadNotificationsCount,
   onLeftIconPress,
   onRightIconPress,
   onClearFilter,
+  onSearchPress,
+  onNotificationsPress,
 }: ConversationHeaderPresenterProps) => {
   const { handlers, animatedStyle } = useScaleAnimation();
 
   return (
     <Animated.View
-      style={[tailwind.style('flex flex-row justify-between items-center px-4 pt-2 pb-[12px]')]}>
+      style={[tailwind.style('flex flex-row justify-between items-center px-4 pt-1 pb-2.5')]}>
       <LeftSlot
         currentState={currentState}
         isSelectedAll={isSelectedAll}
@@ -197,11 +258,13 @@ export const ConversationHeaderPresenter = ({
         handlers={handlers}
         animatedStyle={animatedStyle}
       />
-      <HeaderTitle />
       <RightSection
         currentState={currentState}
         filtersAppliedCount={filtersAppliedCount}
+        unreadNotificationsCount={unreadNotificationsCount}
         onRightIconPress={onRightIconPress}
+        onSearchPress={onSearchPress}
+        onNotificationsPress={onNotificationsPress}
       />
     </Animated.View>
   );

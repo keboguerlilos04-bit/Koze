@@ -11,14 +11,14 @@ import { CheckedIcon, UncheckedIcon } from '@/svg-icons';
 import { showToast } from '@/utils/toastUtils';
 import { AdminService, showAdminError } from '@/store/admin/adminService';
 import type { AdminAgent } from '@/store/admin/adminTypes';
-import type { SettingsStackParamList } from '@/navigation/stack/SettingsStack';
+import type { InboxesStackParamList } from '@/navigation/stack/InboxesStack';
 
 // Koze: pick the agents who can see and answer one inbox. Administrators see every inbox,
 // so only agents are listed.
 const AdminInboxAgentsScreen = () => {
-  const navigation = useNavigation<NativeStackNavigationProp<SettingsStackParamList>>();
+  const navigation = useNavigation<NativeStackNavigationProp<InboxesStackParamList>>();
   const { inboxId, inboxName } =
-    useRoute<RouteProp<SettingsStackParamList, 'AdminInboxAgents'>>().params;
+    useRoute<RouteProp<InboxesStackParamList, 'AdminInboxAgents'>>().params;
   const [agents, setAgents] = useState<AdminAgent[]>([]);
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const [isLoading, setIsLoading] = useState(true);
