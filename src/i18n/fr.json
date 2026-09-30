@@ -170,6 +170,7 @@
     "DONE": "Mot de passe enregistré. Vous pouvez vous connecter."
   },
   "PROFILE": {
+    "EDIT": "Modifier",
     "PHONE_SAVED": "Numéro enregistré",
     "SAVE_PHONE": "Enregistrer mon numéro",
     "MANAGED_BY_OWNER": "Votre nom, votre sexe et votre e-mail sont gérés par le propriétaire du compte.",
@@ -201,6 +202,9 @@
     "EMPTY_AGENT": "Vous n'êtes assigné à aucune boîte. Demandez au propriétaire du compte."
   },
   "PAYWALL": {
+    "OTHER_NUMBER": "Payer avec un autre numéro MonCash",
+    "OTHER_NUMBER_LABEL": "Numéro MonCash pour ce paiement",
+    "USE_MY_NUMBER": "Utiliser mon numéro ({{number}})",
     "ADD_NUMBER": "Ajoutez le numéro MonCash qui paiera vos boîtes de réception.",
     "SAVE_NUMBER": "Enregistrer le numéro",
     "TITLE": "Ajouter une boîte",

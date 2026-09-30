@@ -36,6 +36,20 @@ describe('BillingService', () => {
     );
   });
 
+  it('can pay this one time from another MonCash number', async () => {
+    (apiService.post as jest.Mock).mockResolvedValueOnce({
+      data: { ...summary, payment: { id: 'pay-2', moncash_number: '+50944556677' } },
+    });
+
+    await BillingService.startPayment('+50944556677');
+
+    expect(apiService.post).toHaveBeenCalledWith(
+      'koze_payments',
+      { moncash_number: '+50944556677' },
+      ownErrors,
+    );
+  });
+
   it('starts a payment, then confirms it by id', async () => {
     const payment = { id: 'pay-1', status: 'pending', redirect_url: null };
     (apiService.post as jest.Mock)

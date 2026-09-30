@@ -32,8 +32,13 @@ export class BillingService {
     return response.data;
   }
 
-  static async startPayment(): Promise<PaymentResponse> {
-    const response = await apiService.post<PaymentResponse>('koze_payments', {}, ownErrors);
+  // `payWith` pays this one time from another MonCash number than the account's.
+  static async startPayment(payWith?: string): Promise<PaymentResponse> {
+    const response = await apiService.post<PaymentResponse>(
+      'koze_payments',
+      payWith ? { moncash_number: payWith } : {},
+      ownErrors,
+    );
     return response.data;
   }
 

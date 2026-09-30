@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { Animated, ScrollView, View } from 'react-native';
+import { Animated, Pressable, ScrollView, View } from 'react-native';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -56,6 +56,11 @@ const MonCashPaywallScreen = () => {
   const [moncashDigits, setMoncashDigits] = useState('');
   const [numberError, setNumberError] = useState<string>();
   const [isSavingNumber, setIsSavingNumber] = useState(false);
+  // Paying this one time from another MonCash number than the account's.
+  const [isPayingWithOther, setIsPayingWithOther] = useState(false);
+  const [otherDigits, setOtherDigits] = useState('');
+  const [otherError, setOtherError] = useState<string>();
+  const cleanOtherDigits = otherDigits.replace(/[\s-]/g, '');
 
   const saveNumber = async () => {
     const digits = moncashDigits.replace(/[\s-]/g, '');
@@ -88,9 +93,16 @@ const MonCashPaywallScreen = () => {
 
   const pay = async () => {
     if (isPaying || !billing) return;
+    if (isPayingWithOther && !/^\d{8}$/.test(cleanOtherDigits)) {
+      setOtherError(i18n.t('SIGNUP.MONCASH_ERROR'));
+      return;
+    }
+    setOtherError(undefined);
     setIsPaying(true);
     try {
-      const { payment } = await BillingService.startPayment();
+      const { payment } = await BillingService.startPayment(
+        isPayingWithOther ? `+509${cleanOtherDigits}` : undefined,
+      );
       // The real MonCash gateway sends the customer to its own page to approve the payment.
       if (payment.redirect_url) {
         await WebBrowser.openBrowserAsync(payment.redirect_url);
@@ -174,7 +186,13 @@ const MonCashPaywallScreen = () => {
               />
               <ReceiptRow
                 label={i18n.t('PAYWALL.MONCASH_NUMBER')}
-                value={billing.moncash_number || i18n.t('PAYWALL.NO_NUMBER')}
+                value={
+                  isPayingWithOther
+                    ? cleanOtherDigits
+                      ? `+509 ${cleanOtherDigits}`
+                      : '+509 …'
+                    : billing.moncash_number || i18n.t('PAYWALL.NO_NUMBER')
+                }
               />
               <ReceiptRow
                 isTotal
@@ -194,6 +212,45 @@ const MonCashPaywallScreen = () => {
 
             {billing.moncash_number ? (
               <View style={tailwind.style('pt-6')}>
+                {isPayingWithOther ? (
+                  <KozeCard style={tailwind.style('p-4 gap-2 mb-4')}>
+                    <Animated.Text style={tailwind.style('font-inter-420-20 text-koze-navy')}>
+                      {i18n.t('PAYWALL.OTHER_NUMBER_LABEL')}
+                    </Animated.Text>
+                    <KozeTextInput
+                      prefix="+509"
+                      value={otherDigits}
+                      onChangeText={setOtherDigits}
+                      hasError={!!otherError}
+                      keyboardType="phone-pad"
+                      autoFocus
+                    />
+                    {otherError ? (
+                      <Animated.Text style={tailwind.style('font-inter-normal-20 text-ruby-900')}>
+                        {otherError}
+                      </Animated.Text>
+                    ) : null}
+                    <Pressable
+                      hitSlop={8}
+                      onPress={() => {
+                        setIsPayingWithOther(false);
+                        setOtherError(undefined);
+                      }}>
+                      <Animated.Text style={tailwind.style('text-blue-800 font-inter-medium-24')}>
+                        {i18n.t('PAYWALL.USE_MY_NUMBER', { number: billing.moncash_number })}
+                      </Animated.Text>
+                    </Pressable>
+                  </KozeCard>
+                ) : (
+                  <Pressable
+                    hitSlop={8}
+                    style={tailwind.style('self-center pb-4')}
+                    onPress={() => setIsPayingWithOther(true)}>
+                    <Animated.Text style={tailwind.style('text-blue-800 font-inter-medium-24')}>
+                      {i18n.t('PAYWALL.OTHER_NUMBER')}
+                    </Animated.Text>
+                  </Pressable>
+                )}
                 <Button
                   disabled={isPaying}
                   text={isPaying ? i18n.t('PAYWALL.PAYING') : i18n.t('PAYWALL.PAY', { price })}

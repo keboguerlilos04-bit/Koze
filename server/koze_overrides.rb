@@ -98,9 +98,12 @@ module KozeBilling
     payments(account).select { |p| p['status'] == 'success' && p['inbox_id'].nil? }
   end
 
-  def start_payment(account)
-    number = moncash_number(account)
+  # `pay_with` lets the owner pay this one time from another MonCash account than the one
+  # saved on the Koze account.
+  def start_payment(account, pay_with = nil)
+    number = pay_with.present? ? normalize_moncash(pay_with) : moncash_number(account)
     raise Error, 'Add a MonCash number to your account first' if number.blank?
+    raise Error, 'Enter a valid MonCash number: +509 followed by 8 digits' unless number.match?(MONCASH_NUMBER)
 
     account.with_lock do
       id = SecureRandom.uuid

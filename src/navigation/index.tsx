@@ -35,6 +35,13 @@ import Inter50024 from '@/assets/fonts/Inter-500-24.ttf';
 import Inter58024 from '@/assets/fonts/Inter-580-24.ttf';
 import Inter60020 from '@/assets/fonts/Inter-600-20.ttf';
 
+// Koze: the splash screen (Koze logo) stays for at least 4 seconds from launch.
+const SPLASH_MIN_DURATION_MS = 4000;
+const splashShownAt = Date.now();
+SplashScreen.preventAutoHideAsync().catch(() => {
+  // Already hidden (e.g. a fast refresh in development): nothing to keep up.
+});
+
 // Koze: Firebase only initialises when google-services.json / GoogleService-Info.plist
 // are configured. Without them every messaging call throws and the app crashes on launch.
 const isFirebaseConfigured = getApps().length > 0;
@@ -144,9 +151,7 @@ export const AppNavigationContainer = () => {
       }
 
       // getInitialNotification: When the application is opened from a quit state.
-      const message = isFirebaseConfigured
-        ? await getInitialNotification(getMessaging())
-        : null;
+      const message = isFirebaseConfigured ? await getInitialNotification(getMessaging()) : null;
       if (message) {
         const notification = findNotificationFromFCM({ message });
         if (notification) {
@@ -211,6 +216,10 @@ export const AppNavigationContainer = () => {
 
   const onLayoutRootView = useCallback(async () => {
     if (fontsLoaded) {
+      const remaining = SPLASH_MIN_DURATION_MS - (Date.now() - splashShownAt);
+      if (remaining > 0) {
+        await new Promise(resolve => setTimeout(resolve, remaining));
+      }
       await SplashScreen.hideAsync();
     }
   }, [fontsLoaded]);

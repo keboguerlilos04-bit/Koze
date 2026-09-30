@@ -56,8 +56,8 @@ function render(svg, width, out) {
 render(squareSvg(0.72, '#ffffff'), 1024, 'assets/icon.png');
 // Android adaptive foreground: transparent, mark inside the 66% safe zone.
 render(squareSvg(0.55, null), 1024, 'assets/adaptive-icon.png');
-// Splash: full logo with text, centered on white.
-render(fullLogoOnCanvas(1284, 2778, 520, '#ffffff'), 1284, 'assets/splash.png');
+// Splash: full logo with text, about 70% of the screen width, centered on white.
+render(fullLogoOnCanvas(1284, 2778, 900, '#ffffff'), 1284, 'assets/splash.png');
 // Empty states: the mark alone, transparent, 3x of 80x80 dp.
 render(squareSvg(1, null), 240, 'src/assets/images/logo-mark.png');
 // Login screen logo: full logo cropped to its content (412x500), transparent, 3x of 80x97 dp.

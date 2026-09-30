@@ -4,6 +4,7 @@
 #
 # GET  /api/v1/accounts/:account_id/koze_payments             billing summary
 # POST /api/v1/accounts/:account_id/koze_payments             start a payment
+#                                                              { moncash_number } to pay from another number
 # POST /api/v1/accounts/:account_id/koze_payments/:id/confirm  check it with the gateway
 # PATCH /api/v1/accounts/:account_id/koze_payments/moncash     set the MonCash number
 #
@@ -17,7 +18,7 @@ class Api::V1::Accounts::KozePaymentsController < Api::V1::Accounts::BaseControl
   end
 
   def create
-    payment = KozeBilling.start_payment(Current.account)
+    payment = KozeBilling.start_payment(Current.account, params[:moncash_number])
     render json: { payment: payment, **summary }
   rescue KozeBilling::Error => e
     render json: { message: e.message }, status: :unprocessable_entity

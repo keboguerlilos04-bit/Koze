@@ -174,6 +174,7 @@
     "DONE": "Password saved. You can sign in now."
   },
   "PROFILE": {
+    "EDIT": "Edit",
     "PHONE_SAVED": "Phone number saved",
     "SAVE_PHONE": "Save my phone number",
     "MANAGED_BY_OWNER": "Your name, gender and email are managed by the account owner.",
@@ -205,6 +206,9 @@
     "EMPTY_AGENT": "You are not assigned to an inbox yet. Ask the account owner."
   },
   "PAYWALL": {
+    "OTHER_NUMBER": "Pay with another MonCash number",
+    "OTHER_NUMBER_LABEL": "MonCash number for this payment",
+    "USE_MY_NUMBER": "Use my number ({{number}})",
     "ADD_NUMBER": "Add the MonCash number that will pay for your inboxes.",
     "SAVE_NUMBER": "Save the number",
     "TITLE": "Add an inbox",
