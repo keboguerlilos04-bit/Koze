@@ -62,6 +62,50 @@ describe('AuthService', () => {
       await expect(AuthService.login(credentials)).rejects.toThrow(error);
     });
   });
+  describe('Koze account self-service', () => {
+    it('sets a new password with the reset code, without being signed in', async () => {
+      (apiService.post as jest.Mock).mockResolvedValueOnce({ data: {} });
+
+      await AuthService.redeemResetCode('rose@example.com', '123456', 'Rose#2026');
+
+      expect(apiService.post).toHaveBeenCalledWith(
+        'api/v1/koze_password_resets',
+        { email: 'rose@example.com', code: '123456', password: 'Rose#2026' },
+        { skipErrorToast: true },
+      );
+    });
+
+    it('updates only the phone number of the signed-in member', async () => {
+      (apiService.put as jest.Mock).mockResolvedValueOnce({ data: {} });
+
+      await AuthService.updateMyPhone('+50937009988');
+
+      expect(apiService.put).toHaveBeenCalledWith(
+        'profile',
+        { profile: { phone_number: '+50937009988' } },
+        { skipErrorToast: true },
+      );
+    });
+
+    it('changes the password with the current one', async () => {
+      (apiService.put as jest.Mock).mockResolvedValueOnce({ data: {} });
+
+      await AuthService.changePassword('Old#2026', 'New#2026');
+
+      expect(apiService.put).toHaveBeenCalledWith(
+        'profile',
+        {
+          profile: {
+            current_password: 'Old#2026',
+            password: 'New#2026',
+            password_confirmation: 'New#2026',
+          },
+        },
+        { skipErrorToast: true },
+      );
+    });
+  });
+
   describe('signup', () => {
     const payload = {
       user_full_name: 'Jean Pierre',

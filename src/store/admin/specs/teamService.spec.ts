@@ -23,11 +23,24 @@ describe('AdminService team management', () => {
 
   it("edits a member's contact details and password", async () => {
     (apiService.patch as jest.Mock).mockResolvedValueOnce({ data: { id: 5 } });
-    const payload = { name: 'Emi', email: 'emi@example.com', phone_number: '+50937001122' };
+    const payload = {
+      name: 'Emi',
+      email: 'emi@example.com',
+      phone_number: '+50937001122',
+      gender: 'female' as const,
+    };
 
     await AdminService.updateMember(5, payload);
 
     expect(apiService.patch).toHaveBeenCalledWith('koze_agents/5', payload, ownErrors);
+  });
+
+  it("gets a one-time code to reset a member's password", async () => {
+    const code = { code: '654321', expires_at: '2026-10-01T12:00:00Z' };
+    (apiService.post as jest.Mock).mockResolvedValueOnce({ data: code });
+
+    await expect(AdminService.resetPassword(5)).resolves.toEqual(code);
+    expect(apiService.post).toHaveBeenCalledWith('koze_agents/5/reset_password', {}, ownErrors);
   });
 
   it('pauses and resumes an agent', async () => {

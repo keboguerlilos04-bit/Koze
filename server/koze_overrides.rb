@@ -325,6 +325,64 @@ module KozeWorkingHoursGuard
   end
 end
 
+# Password resets without email: the owner gets a one-time 6-digit code for an agent, and
+# the agent picks their own new password with it, so the owner never knows it. Only a digest
+# of the code is kept, in user.custom_attributes['koze_password_reset'].
+module KozePasswordReset
+  TTL = 24.hours
+  MAX_ATTEMPTS = 5
+
+  class Error < StandardError; end
+
+  module_function
+
+  # Returns the code to hand to the agent; any earlier code stops working.
+  def issue!(user)
+    code = format('%06d', SecureRandom.random_number(1_000_000))
+    user.update!(custom_attributes: (user.custom_attributes || {}).merge(
+      'koze_password_reset' => { 'digest' => digest(user, code), 'expires_at' => (Time.current + TTL).iso8601,
+                                 'attempts' => 0 }
+    ))
+    { code: code, expires_at: (Time.current + TTL).iso8601 }
+  end
+
+  # One message for every failure, so the endpoint does not reveal which emails exist.
+  def redeem!(email, code, password)
+    user = User.from_email(email.to_s.strip.downcase)
+    reset = user&.custom_attributes&.dig('koze_password_reset')
+    raise Error, 'Invalid or expired code' unless reset && Time.zone.parse(reset['expires_at']).future?
+    raise Error, 'Invalid or expired code' if reset['attempts'].to_i >= MAX_ATTEMPTS
+
+    unless ActiveSupport::SecurityUtils.secure_compare(reset['digest'], digest(user, code.to_s.strip))
+      reset['attempts'] = reset['attempts'].to_i + 1
+      user.update!(custom_attributes: user.custom_attributes.merge('koze_password_reset' => reset))
+      raise Error, 'Invalid or expired code'
+    end
+
+    user.password = password
+    user.password_confirmation = password
+    user.custom_attributes = user.custom_attributes.except('koze_password_reset')
+    user.save!
+    user
+  end
+
+  def digest(user, code)
+    Digest::SHA256.hexdigest("#{Rails.application.secret_key_base}:#{user.id}:#{code}")
+  end
+end
+
+# Only the owner changes their own name or email; everyone else's are managed by the owner
+# (koze_agents). Agents still update their phone number and password through the profile.
+module KozeProfileGuard
+  def update
+    owner = current_user.account_users.exists?(role: :administrator, inviter_id: nil)
+    params[:profile]&.delete(:name) unless owner
+    params[:profile]&.delete(:email) unless owner
+    params[:profile]&.delete(:display_name) unless owner
+    super
+  end
+end
+
 # Signup from the app must include the owner's MonCash number, kept on the account (billing)
 # and on the user. Only unauthenticated signups are checked: an existing user adding an
 # account from the dashboard is not asked again.
@@ -369,6 +427,8 @@ end
 Rails.application.routes.prepend do
   namespace :api, defaults: { format: 'json' } do
     namespace :v1 do
+      # Public: an agent sets a new password with the owner's reset code.
+      resources :koze_password_resets, only: [:create]
       resources :accounts, only: [] do
         scope module: :accounts do
           resources :koze_agents, only: [:index, :create, :update] do
@@ -376,6 +436,7 @@ Rails.application.routes.prepend do
               post :pause
               post :resume
               put :schedule
+              post :reset_password
             end
           end
           resources :koze_payments, only: [:index, :create] do
@@ -424,6 +485,7 @@ Rails.application.config.to_prepare do
     end)
   end
   AgentBuilder.prepend(KozeAgentBuilderQuota) unless AgentBuilder < KozeAgentBuilderQuota
+  Api::V1::ProfilesController.prepend(KozeProfileGuard) unless Api::V1::ProfilesController < KozeProfileGuard
   unless Api::V1::Accounts::AgentsController < KozeAgentRoleQuota
     Api::V1::Accounts::AgentsController.prepend(KozeAgentRoleQuota)
   end

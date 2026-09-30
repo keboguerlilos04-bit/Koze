@@ -3,73 +3,58 @@ import { Alert, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
-import Clipboard from '@react-native-clipboard/clipboard';
 
 import { tailwind } from '@/theme';
 import i18n from '@/i18n';
-import { EMAIL_REGEX, PASSWORD_REGEX } from '@/constants';
+import { EMAIL_REGEX } from '@/constants';
 import { Button } from '@/components-next';
-import { showToast } from '@/utils/toastUtils';
 import { AdminService, showAdminError } from '@/store/admin/adminService';
+import type { UserRole } from '@/types/User';
 import { AdminTextField } from './components/AdminTextField';
+import { ChoiceChips } from './components/ChoiceChips';
+import { showResetCodeAlert } from './components/resetCodeAlert';
 
-type Errors = { name?: string; email?: string; password?: string };
+type Errors = { name?: string; email?: string };
 
-// Koze: the owner adds an agent with a temporary password, since invitation emails cannot
-// be sent without SMTP. The owner then passes the sign-in details on to the agent.
+// Koze: the owner adds an agent or an administrator. The owner never chooses their password:
+// a new member gets a one-time code and picks it on the login screen.
 const AdminAddAgentScreen = () => {
   const navigation = useNavigation();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [role, setRole] = useState<UserRole>('agent');
   const [errors, setErrors] = useState<Errors>({});
   const [isSaving, setIsSaving] = useState(false);
 
-  const validate = (): Errors => ({
-    name: name.trim() ? undefined : i18n.t('ADMIN.FIELD_REQUIRED'),
-    email: EMAIL_REGEX.test(email.trim()) ? undefined : i18n.t('LOGIN.EMAIL_ERROR'),
-    password: PASSWORD_REGEX.test(password) ? undefined : i18n.t('SIGNUP.PASSWORD_ERROR'),
-  });
-
-  const showCredentials = (agentName: string, agentEmail: string) => {
-    const details = i18n.t('ADMIN.AGENT_CREATED_MESSAGE', {
-      name: agentName,
-      email: agentEmail,
-      password,
-    });
-    Alert.alert(i18n.t('ADMIN.AGENT_CREATED_TITLE'), details, [
-      {
-        text: i18n.t('ADMIN.COPY_DETAILS'),
-        onPress: () => {
-          Clipboard.setString(details);
-          showToast({ message: i18n.t('ADMIN.DETAILS_COPIED') });
-          navigation.goBack();
-        },
-      },
-      { text: i18n.t('ADMIN.DONE'), onPress: () => navigation.goBack() },
-    ]);
-  };
-
   const onSubmit = async () => {
-    const found = validate();
+    const found: Errors = {
+      name: name.trim() ? undefined : i18n.t('ADMIN.FIELD_REQUIRED'),
+      email: EMAIL_REGEX.test(email.trim()) ? undefined : i18n.t('LOGIN.EMAIL_ERROR'),
+    };
     setErrors(found);
-    if (isSaving || found.name || found.email || found.password) return;
+    if (isSaving || found.name || found.email) return;
 
     setIsSaving(true);
     try {
-      const agent = await AdminService.createAgent({
+      const member = await AdminService.createAgent({
         name: name.trim(),
         email: email.trim().toLowerCase(),
-        password,
+        role,
       });
-      if (agent.existing_user) {
+      if (member.reset_code) {
+        showResetCodeAlert({
+          title: i18n.t('ADMIN.AGENT_CREATED_TITLE'),
+          name: member.name,
+          email: member.email,
+          code: member.reset_code,
+          onClose: () => navigation.goBack(),
+        });
+      } else {
         Alert.alert(
           i18n.t('ADMIN.AGENT_CREATED_TITLE'),
-          i18n.t('ADMIN.AGENT_EXISTING_MESSAGE', { email: agent.email }),
+          i18n.t('ADMIN.AGENT_EXISTING_MESSAGE', { email: member.email }),
           [{ text: i18n.t('ADMIN.DONE'), onPress: () => navigation.goBack() }],
         );
-      } else {
-        showCredentials(agent.name, agent.email);
       }
     } catch (error) {
       showAdminError(error);
@@ -98,16 +83,18 @@ const AdminAddAgentScreen = () => {
           error={errors.email}
           keyboardType="email-address"
         />
-        <AdminTextField
-          label={i18n.t('ADMIN.TEMP_PASSWORD')}
-          value={password}
-          onChangeText={setPassword}
-          error={errors.password}
-          hint={i18n.t('ADMIN.TEMP_PASSWORD_HINT')}
-          secure
+        <ChoiceChips<UserRole>
+          label={i18n.t('ADMIN.ROLE_LABEL')}
+          value={role}
+          onChange={setRole}
+          options={[
+            { value: 'agent', label: i18n.t('ADMIN.ROLE_AGENT') },
+            { value: 'administrator', label: i18n.t('ADMIN.ROLE_ADMINISTRATOR') },
+          ]}
         />
         <View style={tailwind.style('pt-8')}>
           <Button
+            disabled={isSaving}
             text={isSaving ? i18n.t('ADMIN.CREATING_AGENT') : i18n.t('ADMIN.CREATE_AGENT')}
             handlePress={onSubmit}
           />

@@ -18,8 +18,11 @@ export interface WorkSchedule {
 }
 
 // A member of the team as the owner sees it (server: koze_agents index).
+export type Gender = '' | 'female' | 'male' | 'other';
+
 export interface TeamMember extends AdminAgent {
   phone_number: string | null;
+  gender: Gender | null;
   is_owner: boolean;
   availability_status: 'online' | 'offline' | 'busy';
   paused: boolean;
@@ -32,22 +35,32 @@ export interface TeamResponse {
   agents: TeamMember[];
 }
 
+// The owner never sets passwords: see ResetCode.
 export interface UpdateMemberPayload {
   name?: string;
   email?: string;
   phone_number?: string;
-  password?: string;
+  gender?: Gender;
 }
 
 export interface CreateAgentPayload {
   name: string;
   email: string;
-  password: string;
+  role: UserRole;
+}
+
+// One-time code (24 h) a member uses on the login screen to choose their own password.
+export interface ResetCode {
+  code: string;
+  expires_at: string;
 }
 
 export interface CreateAgentResponse extends AdminAgent {
   // True when the email already had a Koze account: that person keeps their own password.
   existing_user: boolean;
+  // Set for a new member, who picks their password with it.
+  reset_code: string | null;
+  reset_expires_at: string | null;
 }
 
 export interface TelegramInboxPayload {

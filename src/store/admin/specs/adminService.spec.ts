@@ -26,9 +26,16 @@ describe('AdminService', () => {
     jest.clearAllMocks();
   });
 
-  it('creates an agent with a temporary password through the Koze endpoint', async () => {
-    const payload = { name: 'Marie', email: 'marie@example.com', password: 'Agent#2026' };
-    const created = { id: 3, ...payload, role: 'agent', confirmed: true, existing_user: false };
+  it('adds a member through the Koze endpoint and gets their reset code', async () => {
+    const payload = { name: 'Marie', email: 'marie@example.com', role: 'administrator' as const };
+    const created = {
+      id: 3,
+      ...payload,
+      confirmed: true,
+      existing_user: false,
+      reset_code: '123456',
+      reset_expires_at: '2026-10-01T12:00:00Z',
+    };
     (apiService.post as jest.Mock).mockResolvedValueOnce({ data: created });
 
     await expect(AdminService.createAgent(payload)).resolves.toEqual(created);

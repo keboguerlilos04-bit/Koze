@@ -6,7 +6,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
 
 import { tailwind } from '@/theme';
 import i18n from '@/i18n';
-import { EMAIL_REGEX, PASSWORD_REGEX } from '@/constants';
+import { EMAIL_REGEX } from '@/constants';
 import { useAppSelector } from '@/hooks';
 import { Button, KozeCard, Spinner } from '@/components-next';
 import { KOZE_COLORS } from '@/theme/colors/koze';
@@ -14,10 +14,12 @@ import { showToast } from '@/utils/toastUtils';
 import { selectUserId } from '@/store/auth/authSelectors';
 import { selectTeamPresence } from '@/store/team-presence/teamPresenceSlice';
 import { AdminService, showAdminError } from '@/store/admin/adminService';
-import type { TeamMember, WeekDay, WorkSchedule } from '@/store/admin/adminTypes';
+import type { Gender, TeamMember, WeekDay, WorkSchedule } from '@/store/admin/adminTypes';
 import type { SettingsStackParamList } from '@/navigation/stack/SettingsStack';
 import { AdminTextField } from './components/AdminTextField';
 import { StatusDot, statusLabel } from './components/StatusDot';
+import { ChoiceChips } from './components/ChoiceChips';
+import { showResetCodeAlert } from './components/resetCodeAlert';
 
 const WEEK: { day: WeekDay; label: string }[] = [
   { day: 'mon', label: 'ADMIN.DAY_MON' },
@@ -63,7 +65,7 @@ const TimeInput = ({ value, onChange }: { value: string; onChange: (v: string) =
 
 const switchColors = { false: KOZE_COLORS.line, true: KOZE_COLORS.primary };
 
-// Koze: one team member — contact details, password, pause and working hours.
+// Koze: one team member — contact details, password reset code, pause and working hours.
 const AdminAgentDetailScreen = () => {
   const navigation = useNavigation();
   const { memberId } = useRoute<RouteProp<SettingsStackParamList, 'AdminAgentDetail'>>().params;
@@ -74,7 +76,7 @@ const AdminAgentDetailScreen = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
-  const [password, setPassword] = useState('');
+  const [gender, setGender] = useState<Gender>('');
   const [days, setDays] = useState<WorkSchedule['days'] | null>(null);
   const [errors, setErrors] = useState<Record<string, string | undefined>>({});
   const [busy, setBusy] = useState<string | null>(null);
@@ -84,6 +86,7 @@ const AdminAgentDetailScreen = () => {
     setName(next.name);
     setEmail(next.email);
     setPhone(next.phone_number ?? '');
+    setGender(next.gender ?? '');
     setDays(next.schedule?.days ?? null);
   };
 
@@ -144,26 +147,29 @@ const AdminAgentDetailScreen = () => {
           name: name.trim(),
           email: email.trim().toLowerCase(),
           phone_number: phone.trim(),
+          gender,
         }),
       i18n.t('ADMIN.CONTACT_SAVED'),
     );
   };
 
-  const savePassword = () => {
-    const passwordError = PASSWORD_REGEX.test(password)
-      ? undefined
-      : i18n.t('SIGNUP.PASSWORD_ERROR');
-    setErrors(current => ({ ...current, password: passwordError }));
-    if (passwordError) return;
-    run(
-      'password',
-      async () => {
-        const updated = await AdminService.updateMember(member.id, { password });
-        setPassword('');
-        return updated;
-      },
-      i18n.t('ADMIN.PASSWORD_CHANGED'),
-    );
+  // The owner never sets a member's password: they get a one-time code to hand over.
+  const resetPassword = async () => {
+    if (busy) return;
+    setBusy('password');
+    try {
+      const { code } = await AdminService.resetPassword(member.id);
+      showResetCodeAlert({
+        title: i18n.t('ADMIN.RESET_CODE_TITLE'),
+        name: member.name,
+        email: member.email,
+        code,
+      });
+    } catch (error) {
+      showAdminError(error);
+    } finally {
+      setBusy(null);
+    }
   };
 
   const togglePause = (paused: boolean) =>
@@ -272,6 +278,17 @@ const AdminAgentDetailScreen = () => {
             onChangeText={setPhone}
             keyboardType="phone-pad"
           />
+          <ChoiceChips<Gender>
+            label={i18n.t('ADMIN.GENDER')}
+            value={gender}
+            onChange={setGender}
+            options={[
+              { value: 'female', label: i18n.t('ADMIN.GENDER_FEMALE') },
+              { value: 'male', label: i18n.t('ADMIN.GENDER_MALE') },
+              { value: 'other', label: i18n.t('ADMIN.GENDER_OTHER') },
+              { value: '', label: i18n.t('ADMIN.GENDER_UNSET') },
+            ]}
+          />
           <View style={tailwind.style('pt-5')}>
             <Button
               disabled={!!busy}
@@ -282,21 +299,24 @@ const AdminAgentDetailScreen = () => {
         </KozeCard>
 
         <SectionTitle text={i18n.t('ADMIN.PASSWORD_SECTION')} />
-        <KozeCard style={tailwind.style('px-4 pb-4')}>
-          <AdminTextField
-            label={i18n.t('ADMIN.NEW_PASSWORD')}
-            value={password}
-            onChangeText={setPassword}
-            error={errors.password}
-            hint={i18n.t('SIGNUP.PASSWORD_HINT')}
-            secure
-          />
-          <View style={tailwind.style('pt-5')}>
+        <KozeCard style={tailwind.style('px-4 py-4 gap-3')}>
+          <Animated.Text style={tailwind.style('text-sm font-inter-normal-20 text-koze-muted')}>
+            {isSelf ? i18n.t('PROFILE.CHANGE_PASSWORD') : i18n.t('ADMIN.RESET_HINT')}
+          </Animated.Text>
+          <View>
             <Button
               variant="secondary"
               disabled={!!busy}
-              text={busy === 'password' ? '…' : i18n.t('ADMIN.SET_PASSWORD')}
-              handlePress={savePassword}
+              text={
+                isSelf
+                  ? i18n.t('PROFILE.CHANGE_PASSWORD')
+                  : busy === 'password'
+                    ? '…'
+                    : i18n.t('ADMIN.RESET_PASSWORD')
+              }
+              handlePress={
+                isSelf ? () => navigation.navigate('ChangePassword' as never) : resetPassword
+              }
             />
           </View>
         </KozeCard>

@@ -12,6 +12,7 @@ L'application sait déjà gérer les conversations d'une entreprise. Pour foncti
 
 | Date | Travail | Détail |
 | --- | --- | --- |
+| 30 sept. | Codes de réinitialisation | Le propriétaire ne choisit plus les mots de passe : il obtient un code à usage unique, la personne choisit son mot de passe depuis l'écran de connexion ; ajout d'administrateurs ; « Mes informations » pour chacun (téléphone modifiable, nom, sexe et e-mail gérés par le propriétaire) |
 | 30 sept. | Gestion de l'équipe | Pause d'un agent, horaires de travail, coordonnées et mot de passe modifiables par le propriétaire, pastille verte « en ligne » en temps réel, limites de 3 agents et 2 administrateurs |
 | 30 sept. | Réglages | Boîtes de réception et Rapports dans Réglages > Administration ; « Changer mon mot de passe » pour tous ; « Statut » traduit |
 | 29 sept. | Nouvelle navigation | 4 onglets (Conversations, Boîtes, Rapports pour les administrateurs, Réglages) ; notifications derrière une cloche ; en-tête compact avec le logo |

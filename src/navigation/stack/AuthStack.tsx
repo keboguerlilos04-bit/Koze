@@ -5,11 +5,13 @@ import Login from '@/screens/auth/LoginScreen';
 import ForgotPassword from '@/screens/auth/ForgotPassword';
 import MFAScreen from '@/screens/auth/MFAScreen';
 import Signup from '@/screens/auth/SignupScreen';
+import ResetWithCode from '@/screens/auth/ResetWithCodeScreen';
 import { KOZE_COLORS } from '@/theme/colors/koze';
 
 export type AuthStackParamList = {
   Login: undefined;
   Signup: undefined;
+  ResetWithCode: undefined;
   ResetPassword: undefined;
   MFAScreen: undefined;
 };
@@ -64,6 +66,19 @@ export const AuthStack = () => {
         }}
         name="MFAScreen"
         component={MFAScreen}
+      />
+      <Stack.Screen
+        options={{
+          headerShown: true,
+          headerBackTitle: 'Back',
+          headerBackVisible: true,
+          headerShadowVisible: false,
+          headerStyle: { backgroundColor: KOZE_COLORS.canvas },
+          headerTintColor: KOZE_COLORS.primary,
+          title: '',
+        }}
+        name="ResetWithCode"
+        component={ResetWithCode}
       />
     </Stack.Navigator>
   );

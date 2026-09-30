@@ -222,6 +222,13 @@ const LoginScreen = () => {
             name="password"
           />
 
+          <Pressable
+            style={tailwind.style('pt-3 self-end')}
+            onPress={() => navigation.navigate('ResetWithCode' as never)}>
+            <Animated.Text style={tailwind.style('text-blue-800 font-inter-medium-24')}>
+              {i18n.t('RESET_CODE.LINK')}
+            </Animated.Text>
+          </Pressable>
           <Pressable style={tailwind.style('pt-3 pb-6 self-end')} onPress={openResetPassword}>
             <Animated.Text style={tailwind.style('text-blue-800 font-inter-medium-24')}>
               {i18n.t('LOGIN.FORGOT_PASSWORD')}

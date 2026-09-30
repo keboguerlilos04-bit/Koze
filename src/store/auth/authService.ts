@@ -85,6 +85,24 @@ export class AuthService {
     );
   }
 
+  // Koze: an agent updates their own phone number (name and email are the owner's to change).
+  static async updateMyPhone(phoneNumber: string): Promise<void> {
+    await apiService.put(
+      'profile',
+      { profile: { phone_number: phoneNumber } },
+      { skipErrorToast: true },
+    );
+  }
+
+  // Koze: sets a new password with the one-time code from the account owner (no sign-in).
+  static async redeemResetCode(email: string, code: string, password: string): Promise<void> {
+    await apiService.post(
+      'api/v1/koze_password_resets',
+      { email, code, password },
+      { skipErrorToast: true },
+    );
+  }
+
   static async resetPassword(payload: ResetPasswordPayload): Promise<ResetPasswordResponse> {
     const response = await apiService.post<ResetPasswordResponse>('auth/password', payload);
     return response.data;

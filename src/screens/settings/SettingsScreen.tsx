@@ -272,8 +272,16 @@ const SettingsScreen = () => {
     },
   ];
 
-  // Koze: everyone changes their own password here.
+  // Koze: everyone sees their details and changes their phone number and password here.
   const accountList: GenericListType[] = [
+    {
+      hasChevron: true,
+      title: i18n.t('PROFILE.MY_INFO'),
+      icon: <TeamIcon />,
+      subtitle: '',
+      subtitleType: 'light',
+      onPressListItem: () => navigation.navigate('MyAccount' as never),
+    },
     {
       hasChevron: true,
       title: i18n.t('PROFILE.CHANGE_PASSWORD'),

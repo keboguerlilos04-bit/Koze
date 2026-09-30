@@ -3,6 +3,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import SettingsScreen from '@/screens/settings/SettingsScreen';
 import ChangePasswordScreen from '@/screens/settings/ChangePasswordScreen';
+import MyAccountScreen from '@/screens/settings/MyAccountScreen';
 import AdminAgentsScreen from '@/screens/admin/AdminAgentsScreen';
 import AdminAgentDetailScreen from '@/screens/admin/AdminAgentDetailScreen';
 import AdminAddAgentScreen from '@/screens/admin/AdminAddAgentScreen';
@@ -17,6 +18,7 @@ import { kozeHeaderOptions } from './kozeHeaderOptions';
 export type SettingsStackParamList = {
   SettingsScreen: undefined;
   ChangePassword: undefined;
+  MyAccount: undefined;
   // Koze: owner-only administration (Settings > Administration).
   AdminAgents: undefined;
   AdminAgentDetail: { memberId: number; name: string };
@@ -42,6 +44,11 @@ export const SettingsStack = () => {
         options={kozeHeaderOptions(i18n.t('PROFILE.CHANGE_PASSWORD'))}
         name="ChangePassword"
         component={ChangePasswordScreen}
+      />
+      <Stack.Screen
+        options={kozeHeaderOptions(i18n.t('PROFILE.MY_INFO'))}
+        name="MyAccount"
+        component={MyAccountScreen}
       />
       <Stack.Screen
         options={kozeHeaderOptions(i18n.t('ADMIN.AGENTS'))}

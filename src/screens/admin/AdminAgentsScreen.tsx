@@ -61,6 +61,7 @@ const AdminAgentsScreen = () => {
   const agentsCount = team?.agents.filter(member => member.role === 'agent').length ?? 0;
   const adminsCount = team?.agents.filter(member => member.role === 'administrator').length ?? 0;
   const isAgentLimitReached = !!team && agentsCount >= team.limits.agents;
+  const isAdminLimitReached = !!team && adminsCount >= team.limits.administrators;
 
   return (
     <SafeAreaView edges={['bottom']} style={tailwind.style('flex-1 bg-koze-canvas')}>
@@ -150,7 +151,7 @@ const AdminAgentsScreen = () => {
 
             <View style={tailwind.style('pt-6 gap-2')}>
               <Button
-                disabled={isAgentLimitReached}
+                disabled={isAgentLimitReached && isAdminLimitReached}
                 text={i18n.t('ADMIN.ADD_AGENT')}
                 handlePress={() => navigation.navigate('AdminAddAgent')}
               />
@@ -160,6 +161,14 @@ const AdminAgentsScreen = () => {
                     'text-sm text-center font-inter-normal-20 text-koze-muted',
                   )}>
                   {i18n.t('ADMIN.LIMIT_REACHED', { max: team.limits.agents })}
+                </Animated.Text>
+              )}
+              {isAdminLimitReached && (
+                <Animated.Text
+                  style={tailwind.style(
+                    'text-sm text-center font-inter-normal-20 text-koze-muted',
+                  )}>
+                  {i18n.t('ADMIN.ADMIN_LIMIT_REACHED', { max: team.limits.administrators })}
                 </Animated.Text>
               )}
             </View>

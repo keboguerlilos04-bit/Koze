@@ -54,6 +54,15 @@ every 5 minutes) sets them offline so no conversation is assigned to them.
 `koze_agents_controller.rb` also lets the owner edit anyone's name, email, phone and
 password.
 
+## Password reset codes
+
+The owner never sets anyone's password. Adding a member, or `POST .../koze_agents/:id/reset_password`,
+returns a one-time 6-digit code (24 h, 5 attempts). The member then calls the public
+`POST /api/v1/koze_password_resets { email, code, password }`
+(`koze_password_resets_controller.rb`) from the login screen. Only a digest of the code is
+stored. `KozeProfileGuard` stops anyone but an account owner from changing their own name or
+email through `PUT /api/v1/profile`; members can still change their phone number there.
+
 ## MonCash inbox billing
 
 Each new inbox costs 1,500 HTG for 30 days. `koze_payments_controller.rb` adds:

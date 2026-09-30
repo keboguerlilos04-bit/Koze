@@ -7,6 +7,7 @@ import type {
   AdminAgent,
   CreateAgentPayload,
   CreateAgentResponse,
+  ResetCode,
   TeamMember,
   TeamResponse,
   TelegramInboxPayload,
@@ -25,7 +26,8 @@ export class AdminService {
     return response.data;
   }
 
-  // Custom Koze endpoint: creates the agent with a temporary password chosen by the owner.
+  // Custom Koze endpoint: adds an agent or administrator; a new member gets a reset code to
+  // choose their own password.
   static async createAgent(payload: CreateAgentPayload): Promise<CreateAgentResponse> {
     const response = await apiService.post<CreateAgentResponse>('koze_agents', payload, ownErrors);
     return response.data;
@@ -42,6 +44,15 @@ export class AdminService {
     const response = await apiService.patch<TeamMember>(
       `koze_agents/${memberId}`,
       payload,
+      ownErrors,
+    );
+    return response.data;
+  }
+
+  static async resetPassword(memberId: number): Promise<ResetCode> {
+    const response = await apiService.post<ResetCode>(
+      `koze_agents/${memberId}/reset_password`,
+      {},
       ownErrors,
     );
     return response.data;
