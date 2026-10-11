@@ -101,3 +101,24 @@ docker compose up -d --force-recreate rails sidekiq
 Agents and administrators set their own photo from Settings. The app uses Chatwoot's own
 `PUT /api/v1/profile` (`profile[avatar]`) and `DELETE /api/v1/profile/avatar`; photos are
 shrunk to 512px on the phone first. Nothing to configure on the server.
+
+## Hosting on a VPS
+
+`vps-setup.sh` installs everything on a fresh Ubuntu 24.04 server (tested target: AWS EC2
+m7i-flex.large, 8 GB): a 2 GB swap file, Docker, the Koze files in `/opt/koze`, a `.env` with
+new random passwords, the database, and Caddy for HTTPS (`docker-compose.vps.yaml`,
+`Caddyfile`). Without a domain it uses `<ip-with-dashes>.sslip.io`, which points at the server's
+IP, so Let's Encrypt can issue a certificate. Give a public IP that does not change (an AWS
+Elastic IP) before running it.
+
+From the `koze-mobile` folder on Windows (with a `koze` host in `~/.ssh/config`):
+
+```sh
+scp -r server koze:koze-server
+ssh koze "sed -i 's/\r$//' koze-server/vps-setup.sh && sudo nohup bash koze-server/vps-setup.sh < /dev/null > koze-setup.log 2>&1 &"
+ssh koze "tail -n 20 koze-setup.log"
+```
+
+It runs on the server even if the SSH connection drops; the log ends with `KOZE IS READY`.
+Then build the app with `EXPO_PUBLIC_KOZE_SERVER_HOST` set to that domain (the `preview`
+profile in `eas.json`). Run `sudo docker compose ...` commands from `/opt/koze`.

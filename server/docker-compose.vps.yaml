@@ -1,0 +1,21 @@
+# Koze on a VPS: adds Caddy in front of Chatwoot for HTTPS (free Let's Encrypt certificate,
+# renewed automatically). Used together with docker-compose.yaml through COMPOSE_FILE in .env.
+services:
+  caddy:
+    image: caddy:2-alpine
+    restart: always
+    depends_on:
+      - rails
+    ports:
+      - '80:80'
+      - '443:443'
+    environment:
+      - KOZE_DOMAIN=${KOZE_DOMAIN}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+
+volumes:
+  caddy_data:
+  caddy_config:

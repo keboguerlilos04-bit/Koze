@@ -1,0 +1,5 @@
+# Koze: HTTPS in front of Chatwoot. KOZE_DOMAIN comes from .env (see docker-compose.vps.yaml).
+{$KOZE_DOMAIN} {
+	encode gzip
+	reverse_proxy rails:3000
+}

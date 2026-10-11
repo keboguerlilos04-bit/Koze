@@ -1,0 +1,5 @@
+# Koze: server scripts and configs run on Linux; keep LF line endings even on Windows.
+server/*.sh text eol=lf
+server/Caddyfile text eol=lf
+server/*.yaml text eol=lf
+server/*.rb text eol=lf
