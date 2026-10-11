@@ -28,6 +28,7 @@ const nonAccountRoutes = [
   'profile/availability',
   'notification_subscriptions',
   'profile/set_active_account',
+  'profile/avatar',
 ];
 
 // True when a request was made for an account other than the one now active (e.g. it was

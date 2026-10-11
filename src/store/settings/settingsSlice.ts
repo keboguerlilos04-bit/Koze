@@ -28,7 +28,8 @@ const initialState: SettingsState = {
     isUpdating: false,
     isLocaleSet: false,
   },
-  localeValue: 'en',
+  // Koze: French until the user picks another language.
+  localeValue: 'fr',
   notificationSettings: {
     account_id: 0,
     all_email_flags: [],

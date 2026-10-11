@@ -35,7 +35,8 @@ import vi from './vi.json';
 import zh_CN from './zh_CN.json';
 import zh_TW from './zh_TW.json';
 
-i18n.locale = 'en';
+// Koze: French by default; the user can still pick another language in Settings.
+i18n.locale = 'fr';
 i18n.fallbacks = true;
 i18n.translations = {
   af,

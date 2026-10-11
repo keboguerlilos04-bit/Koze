@@ -29,15 +29,15 @@ import {
   SettingsList,
 } from '@/components-next';
 import { Sheet } from '@/components-next/common/sheet/Sheet';
-import { UserAvatar } from './components/UserAvatar';
+import { EditableAvatar } from './components/EditableAvatar';
 
 import { LANGUAGES } from '@/constants';
 import { useRefsContext } from '@/context';
 import {
   ChatwootIcon,
-  NotificationIcon,
   GridIcon,
   InboxFilterIcon,
+  NotificationIcon,
   LockIcon,
   SwitchIcon,
   TeamIcon,
@@ -292,6 +292,18 @@ const SettingsScreen = () => {
     },
   ];
 
+  // Koze: the product catalog, for everyone in the business.
+  const businessList: GenericListType[] = [
+    {
+      hasChevron: true,
+      title: i18n.t('CATALOG.TITLE'),
+      icon: <GridIcon />,
+      subtitle: '',
+      subtitleType: 'light',
+      onPressListItem: () => navigation.navigate('Catalog' as never),
+    },
+  ];
+
   const isChatWidgetConfigured =
     !!process.env.EXPO_PUBLIC_CHATWOOT_WEBSITE_TOKEN && !!process.env.EXPO_PUBLIC_CHATWOOT_BASE_URL;
 
@@ -331,7 +343,7 @@ const SettingsScreen = () => {
         contentContainerStyle={tailwind.style(`pb-[${tabBarHeight - 1}px]`)}>
         <Animated.View style={tailwind.style('flex justify-center items-center pt-4 gap-4')}>
           <Animated.View>
-            <UserAvatar src={avatarUrl} name={name} status={availabilityStatus} />
+            <EditableAvatar avatarUrl={avatarUrl} name={name} status={availabilityStatus} />
             <Animated.View
               style={tailwind.style(
                 'absolute border-[2px] border-white rounded-full -bottom-[2px] right-[10px]',
@@ -354,6 +366,9 @@ const SettingsScreen = () => {
             <SettingsList sectionTitle={i18n.t('ADMIN.SECTION')} list={adminList} />
           </Animated.View>
         )}
+        <Animated.View style={tailwind.style('pt-6')}>
+          <SettingsList sectionTitle={i18n.t('CATALOG.SECTION')} list={businessList} />
+        </Animated.View>
         <Animated.View style={tailwind.style('pt-6')}>
           <SettingsList sectionTitle={i18n.t('SETTINGS.PREFERENCES')} list={preferencesList} />
         </Animated.View>
@@ -413,7 +428,7 @@ const SettingsScreen = () => {
       {isChatWidgetConfigured && !!showWidget && (
         <ChatWootWidget
           websiteToken={process.env.EXPO_PUBLIC_CHATWOOT_WEBSITE_TOKEN}
-          locale="en"
+          locale={activeLocale}
           baseUrl={process.env.EXPO_PUBLIC_CHATWOOT_BASE_URL}
           closeModal={() => toggleWidget(false)}
           isModalVisible={showWidget}

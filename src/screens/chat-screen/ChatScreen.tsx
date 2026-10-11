@@ -34,6 +34,7 @@ import i18n from '@/i18n';
 import { StackActions, useNavigation } from '@react-navigation/native';
 import { MacrosList } from './components/macros/MacrosList';
 import { WhatsAppTemplatesList } from './components/whatsapp-templates';
+import { CatalogSheet } from './components/catalog/CatalogSheet';
 import { macroActions } from '@/store/macro/macroActions';
 
 export const ChatWindow = (props: ChatScreenProps) => {
@@ -43,6 +44,7 @@ export const ChatWindow = (props: ChatScreenProps) => {
       <ReplyBoxContainer />
       <MacrosList conversationId={props.route.params.conversationId} />
       <WhatsAppTemplatesList conversationId={props.route.params.conversationId} />
+      <CatalogSheet />
     </Animated.View>
   );
 };

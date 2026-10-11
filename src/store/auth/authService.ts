@@ -14,6 +14,7 @@ import type {
   SetActiveAccountPayload,
   SsoAuthPayload,
   SsoAuthResponse,
+  AvatarUploadPayload,
 } from './authTypes';
 
 export class AuthService {
@@ -109,6 +110,27 @@ export class AuthService {
   }
   static async updateAvailability(payload: AvailabilityPayload): Promise<ProfileResponse> {
     const response = await apiService.post<ProfileResponse>('profile/availability', payload);
+    return response.data;
+  }
+
+  // Koze: every user (agent or administrator) sets their own profile photo.
+  // PUT /api/v1/profile with profile[avatar]; the server answers with the updated user.
+  static async updateAvatar(photo: AvatarUploadPayload): Promise<User> {
+    const formData = new FormData();
+    formData.append('profile[avatar]', {
+      uri: photo.uri,
+      name: photo.fileName || `avatar-${Date.now()}.jpg`,
+      type: photo.type || 'image/jpeg',
+    } as unknown as Blob);
+    const response = await apiService.put<User>('profile', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+      skipErrorToast: true,
+    });
+    return response.data;
+  }
+
+  static async removeAvatar(): Promise<User> {
+    const response = await apiService.delete<User>('profile/avatar', { skipErrorToast: true });
     return response.data;
   }
 

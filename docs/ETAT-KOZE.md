@@ -1,6 +1,6 @@
 # Koze — État du projet
 
-Mis à jour le 27 septembre 2026.
+Mis à jour le 11 octobre 2026.
 
 ## Résumé
 
@@ -12,6 +12,9 @@ L'application sait déjà gérer les conversations d'une entreprise. Pour foncti
 
 | Date | Travail | Détail |
 | --- | --- | --- |
+| 11 oct. | Français par défaut | L'application s'ouvre en français (≈ 175 textes traduits en plus) ; un utilisateur qui a déjà choisi une langue la garde |
+| 11 oct. | Photo de profil | Chaque agent et administrateur choisit, prend ou supprime sa photo dans les Réglages ; photo réduite à 512 px avant l'envoi |
+| 11 oct. | Catalogue de produits | Les administrateurs créent les produits (nom, prix, devise, description, stock, photo) ; chaque téléphone garde sa copie et ne télécharge une photo qu'une fois ; les agents envoient un produit depuis le menu « + » d'une conversation |
 | 30 sept. | Codes de réinitialisation | Le propriétaire ne choisit plus les mots de passe : il obtient un code à usage unique, la personne choisit son mot de passe depuis l'écran de connexion ; ajout d'administrateurs ; « Mes informations » pour chacun (téléphone modifiable, nom, sexe et e-mail gérés par le propriétaire) |
 | 30 sept. | Gestion de l'équipe | Pause d'un agent, horaires de travail, coordonnées et mot de passe modifiables par le propriétaire, pastille verte « en ligne » en temps réel, limites de 3 agents et 2 administrateurs |
 | 30 sept. | Réglages | Boîtes de réception et Rapports dans Réglages > Administration ; « Changer mon mot de passe » pour tous ; « Statut » traduit |
@@ -61,7 +64,6 @@ En attendant SMTP, les nouveaux comptes sont confirmés automatiquement : un ins
 | Pas de Firebase | Aucune notification push | Créer l'app Android `com.koze.app` dans Firebase et fournir `google-services.json` |
 | Android seulement | Aucune version iPhone | Compte Apple Developer (99 $/an) et build iOS |
 | Pas sur le Play Store | Installation manuelle de l'APK (« sources inconnues ») | Compte Google Play (25 $), build `production` (.aab) |
-| Anglais par défaut | Les écrans affichent « Create an account » tant que l'utilisateur n'a pas choisi le français | Mettre le français par défaut |
 | Configuration limitée dans l'application | Site web, e-mail, Facebook et Instagram, équipes, étiquettes et réponses prédéfinies se configurent uniquement sur le site web | Ajouter d'autres écrans selon les besoins |
 | MonCash simulé | Le paiement de 1 500 HTG par boîte est simulé : aucun argent n'est prélevé | Compte marchand MonCash Business et ses clés API |
 | Pas de renouvellement | Une boîte payée n'est pas bloquée après 30 jours | Renouvellement mensuel à développer |
@@ -95,7 +97,7 @@ Expo EAS compile l'APK dans le cloud.
 1. **Configurer SMTP avec Brevo** (reporté ; confirmation automatique en attendant).
 2. **Installer le nouvel APK** et tester : inscription, déconnexion, reconnexion, messages.
 3. **Créer une boîte de réception de test** (widget de site web).
-4. **Mettre le français par défaut**, si les clients sont francophones.
+4. **Redémarrer le serveur** (`docker compose up -d --force-recreate rails sidekiq`) pour activer le catalogue, puis tester photo de profil et catalogue sur téléphone.
 5. **Configurer Firebase** pour les notifications push.
 6. **Héberger le serveur** sur un VPS avec un nom de domaine.
 7. **Publier sur le Play Store**, puis envisager iOS et un système d'abonnement.

@@ -12,6 +12,8 @@ import AdminInboxAgentsScreen from '@/screens/admin/AdminInboxAgentsScreen';
 import InboxesScreen from '@/screens/inboxes/InboxesScreen';
 import MonCashPaywallScreen from '@/screens/inboxes/MonCashPaywallScreen';
 import ReportsScreen from '@/screens/reports/ReportsScreen';
+import CatalogScreen from '@/screens/catalog/CatalogScreen';
+import CatalogItemFormScreen from '@/screens/catalog/CatalogItemFormScreen';
 import i18n from '@/i18n';
 import { kozeHeaderOptions } from './kozeHeaderOptions';
 
@@ -28,6 +30,9 @@ export type SettingsStackParamList = {
   AdminAddInbox: { channel: 'telegram' | 'whatsapp' };
   AdminInboxAgents: { inboxId: number; inboxName: string };
   Reports: undefined;
+  // Koze: product catalog (everyone views it, administrators edit it).
+  Catalog: undefined;
+  CatalogItemForm: { itemId?: string };
 };
 
 const Stack = createNativeStackNavigator<SettingsStackParamList>();
@@ -95,6 +100,16 @@ export const SettingsStack = () => {
         options={kozeHeaderOptions(i18n.t('REPORTS.TITLE'))}
         name="Reports"
         component={ReportsScreen}
+      />
+      <Stack.Screen
+        options={kozeHeaderOptions(i18n.t('CATALOG.TITLE'))}
+        name="Catalog"
+        component={CatalogScreen}
+      />
+      <Stack.Screen
+        options={kozeHeaderOptions(i18n.t('CATALOG.ADD_PRODUCT'))}
+        name="CatalogItemForm"
+        component={CatalogItemFormScreen}
       />
     </Stack.Navigator>
   );

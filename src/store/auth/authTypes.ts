@@ -84,3 +84,10 @@ export interface SsoAuthResponse {
   user: User;
   headers: AuthHeaders;
 }
+
+// Koze: a profile photo picked on the phone (react-native-image-picker asset).
+export interface AvatarUploadPayload {
+  uri: string;
+  fileName?: string;
+  type?: string;
+}

@@ -72,3 +72,10 @@ export const selectVerificationChannel = createSelector(
 );
 
 export const selectIsVerifyingMfa = createSelector(selectAuth, auth => auth.uiFlags.isVerifyingMfa);
+
+// Koze: any administrator of the business account in use (not only the owner), e.g. to edit
+// the product catalog.
+export const selectIsAdministrator = createSelector(
+  selectCurrentUserAccount,
+  currentAccount => currentAccount?.role === 'administrator',
+);

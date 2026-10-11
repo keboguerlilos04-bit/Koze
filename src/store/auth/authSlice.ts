@@ -159,6 +159,23 @@ export const authSlice = createSlice({
           ...action.payload.user,
         };
       })
+      .addCase(authActions.updateAvatar.fulfilled, (state, action) => {
+        // The profile answer may name another active account; keep the one in use.
+        state.user = {
+          ...state.user,
+          ...action.payload,
+          account_id: state.user?.account_id ?? action.payload.account_id,
+        } as User;
+      })
+      .addCase(authActions.removeAvatar.fulfilled, (state, action) => {
+        state.user = {
+          ...state.user,
+          ...action.payload,
+          avatar_url: '',
+          thumbnail: '',
+          account_id: state.user?.account_id ?? action.payload.account_id,
+        } as User;
+      })
       .addCase(authActions.verifyMfa.pending, state => {
         state.uiFlags.isVerifyingMfa = true;
         state.error = null;

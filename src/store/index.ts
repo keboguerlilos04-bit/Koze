@@ -45,6 +45,9 @@ const persistConfig = {
         baseUrl: KOZE_SERVER_HOST,
         installationUrl: KOZE_INSTALLATION_URL,
         webSocketUrl: KOZE_WEB_SOCKET_URL,
+        // Koze: French by default. Installs from before that change still hold 'en' without
+        // the user ever choosing it; anyone who did pick a language keeps their choice.
+        localeValue: state.settings?.uiFlags?.isLocaleSet ? state.settings.localeValue : 'fr',
       },
     };
   },

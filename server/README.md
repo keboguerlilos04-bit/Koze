@@ -76,3 +76,28 @@ unused paid credit is refused with 402, so the paywall cannot be skipped through
 Payments are **simulated** (`KozeBilling::SimulatedGateway` in `koze_overrides.rb`, every
 payment succeeds). With MonCash merchant keys, replace it with a gateway that calls the
 MonCash REST API (CreatePayment for the redirect URL, RetrieveOrderPayment for the status).
+## Product catalog
+
+`koze_catalog_controller.rb` is mounted as a controller and adds, for the business account:
+
+- `GET /api/v1/accounts/:account_id/koze_catalog?version=N` (everyone in the account). When the
+  phone already has version `N`, the answer is only `{ version, unchanged: true }`.
+- `POST`, `PATCH`, `DELETE .../koze_catalog/items[/:id]` (administrators). Fields: `name`,
+  `price`, `currency`, `description`, `in_stock`, `image` (multipart), `remove_image`.
+
+The product list lives in the account's `custom_attributes` (no migration). Each photo is one
+ActiveStorage file attached to the account, shrunk to about 800px by the app and refused above
+600 KB. Phones download each photo once and keep it; replacing or deleting a product deletes
+its old photo on the server.
+
+After pulling these files, restart the server so it loads the new controller:
+
+```sh
+docker compose up -d --force-recreate rails sidekiq
+```
+
+## Profile photos
+
+Agents and administrators set their own photo from Settings. The app uses Chatwoot's own
+`PUT /api/v1/profile` (`profile[avatar]`) and `DELETE /api/v1/profile/avatar`; photos are
+shrunk to 512px on the phone first. Nothing to configure on the server.

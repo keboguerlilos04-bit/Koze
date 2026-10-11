@@ -14,7 +14,9 @@ import type {
   SsoAuthPayload,
   SsoAuthResponse,
   SignupPayload,
+  AvatarUploadPayload,
 } from './authTypes';
+import type { User } from '@/types/User';
 import { handleApiError, handleSignupError } from './authUtils';
 import I18n from '@/i18n';
 
@@ -60,6 +62,14 @@ export const authActions = {
     'auth/updateAvailability',
     AuthService.updateAvailability,
   ),
+
+  // Koze: profile photo, for agents and administrators alike.
+  updateAvatar: createAuthThunk<User, AvatarUploadPayload>(
+    'auth/updateAvatar',
+    AuthService.updateAvatar,
+  ),
+
+  removeAvatar: createAuthThunk<User, void>('auth/removeAvatar', () => AuthService.removeAvatar()),
 
   setActiveAccount: createAuthThunk<ProfileResponse, SetActiveAccountPayload>(
     'auth/setActiveAccount',

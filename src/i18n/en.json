@@ -496,7 +496,6 @@
       }
     }
   },
-
   "FILTER": {
     "ALL_INBOXES": "All inboxes",
     "FILTER_BY_ASSIGNEE_TYPE": "Filter by assignee type",
@@ -795,5 +794,44 @@
     "TONE_CONFIDENT": "Confident",
     "GENERATION_FAILED": "Failed to generate content. Please try again.",
     "FOLLOW_UP_FAILED": "Failed to send follow-up. Please try again."
+  },
+  "PROFILE_PHOTO": {
+    "TITLE": "Profile photo",
+    "CHOOSE": "Choose from library",
+    "TAKE": "Take a photo",
+    "REMOVE": "Remove photo",
+    "CANCEL": "Cancel",
+    "UPDATED": "Profile photo updated",
+    "REMOVED": "Profile photo removed",
+    "FAILED": "Could not save the photo. Please try again.",
+    "PERMISSION_TITLE": "Permission denied",
+    "PERMISSION": "Allow access to photos or the camera in your phone settings.",
+    "OPEN_SETTINGS": "Open settings"
+  },
+  "CATALOG": {
+    "SECTION": "Business",
+    "TITLE": "Catalog",
+    "ADD_PRODUCT": "New product",
+    "EDIT_PRODUCT": "Edit product",
+    "EMPTY_TITLE": "No products yet",
+    "EMPTY_ADMIN": "Tap + to add your first product. It is saved on every agent's phone.",
+    "EMPTY_AGENT": "Products added by an administrator will show up here.",
+    "NAME": "Product name",
+    "PRICE": "Price",
+    "CURRENCY": "Currency",
+    "DESCRIPTION": "Description",
+    "IN_STOCK": "In stock",
+    "OUT_OF_STOCK": "Out of stock",
+    "ADD_PHOTO": "Add a photo",
+    "CHOOSE_PHOTO": "Choose a photo",
+    "CHANGE_PHOTO": "Change photo",
+    "REMOVE_PHOTO": "Remove photo",
+    "SAVE": "Save",
+    "SAVING": "Saving…",
+    "SAVED": "Product saved",
+    "DELETE": "Delete product",
+    "DELETE_TITLE": "Delete \"{{name}}\"?",
+    "SELECT_PRODUCT": "Choose a product",
+    "TAP_TO_SEND": "Tap to add it to your reply"
   }
 }

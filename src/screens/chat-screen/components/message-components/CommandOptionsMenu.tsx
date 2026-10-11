@@ -13,10 +13,12 @@ import Animated, { SlideInDown, SlideOutDown } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAppDispatch, useAppSelector } from '@/hooks';
 import { updateAttachments } from '@/store/conversation/sendMessageSlice';
+import { catalogActions } from '@/store/catalog/catalogActions';
 import { useChatWindowContext, useRefsContext } from '@/context';
 import {
   AttachFileIcon,
   CameraIcon,
+  GridIcon,
   MacrosIcon,
   PhotosIcon,
   WhatsAppMonochromeIcon,
@@ -177,6 +179,15 @@ const ADD_MENU_OPTIONS = [
     handlePress: handleAttachFile,
   },
   {
+    id: 'catalog',
+    icon: <GridIcon stroke="black" />,
+    titleKey: 'CATALOG.TITLE',
+    handlePress: dispatch => {
+      // Refresh the phone's copy in the background; the sheet shows what is already there.
+      dispatch(catalogActions.sync());
+    },
+  },
+  {
     id: 'macros',
     icon: <MacrosIcon />,
     titleKey: 'CONVERSATION_ATTACHMENT.OPTIONS.MACROS',
@@ -208,7 +219,7 @@ type MenuOptionProps = {
 const MenuOption = (props: MenuOptionProps) => {
   const { index, menuOption } = props;
   const dispatch = useAppDispatch();
-  const { macrosListSheetRef, whatsAppTemplatesSheetRef } = useRefsContext();
+  const { macrosListSheetRef, whatsAppTemplatesSheetRef, catalogSheetRef } = useRefsContext();
 
   const { animatedStyle, handlers } = useScaleAnimation();
   const hapticSelection = useHaptic();
@@ -216,6 +227,9 @@ const MenuOption = (props: MenuOptionProps) => {
   const handlePress = () => {
     hapticSelection?.();
     menuOption?.handlePress(dispatch);
+    if (menuOption.id === 'catalog') {
+      catalogSheetRef.current?.present();
+    }
     if (menuOption.id === 'macros') {
       macrosListSheetRef.current?.present();
     }

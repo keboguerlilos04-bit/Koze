@@ -426,7 +426,8 @@ module KozeInboxPaywall
   end
 end
 
-# Routes for the Koze controllers (koze_agents_controller.rb, koze_payments_controller.rb).
+# Routes for the Koze controllers (koze_agents_controller.rb, koze_payments_controller.rb,
+# koze_catalog_controller.rb).
 Rails.application.routes.prepend do
   namespace :api, defaults: { format: 'json' } do
     namespace :v1 do
@@ -446,13 +447,28 @@ Rails.application.routes.prepend do
             member { post :confirm }
             collection { patch :moncash }
           end
+          # Product catalog (koze_catalog_controller.rb).
+          get 'koze_catalog', to: 'koze_catalog#show'
+          post 'koze_catalog/items', to: 'koze_catalog#create'
+          patch 'koze_catalog/items/:id', to: 'koze_catalog#update'
+          delete 'koze_catalog/items/:id', to: 'koze_catalog#destroy'
         end
       end
     end
   end
 end
 
+# Catalog photos belong to the business account. ActiveStorage attachments need no migration.
+module KozeCatalogImages
+  extend ActiveSupport::Concern
+
+  included do
+    has_many_attached :koze_catalog_images
+  end
+end
+
 Rails.application.config.to_prepare do
+  Account.include(KozeCatalogImages) unless Account < KozeCatalogImages
   Account::BrandingEnrichmentJob.prepend(KozeKeepSignupAccountName)
   User.prepend(KozeAutoConfirmWithoutSmtp) unless User < KozeAutoConfirmWithoutSmtp
   Api::V1::AccountsController.prepend(KozeSignupMoncash) unless Api::V1::AccountsController < KozeSignupMoncash
