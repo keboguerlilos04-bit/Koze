@@ -64,7 +64,7 @@ offlineCacheListenerMiddleware.startListening({
 
 // The list could not be loaded (no internet, or the server is off): show the saved one.
 offlineCacheListenerMiddleware.startListening({
-  matcher: conversationActions.fetchConversations.rejected,
+  actionCreator: conversationActions.fetchConversations.rejected,
   effect: (action, listenerApi) => {
     if (action.meta.aborted || action.meta.arg.page > 1) return;
     const state = listenerApi.getState() as RootState;
@@ -78,9 +78,9 @@ offlineCacheListenerMiddleware.startListening({
 
 // A conversation opened offline (e.g. from a notification) comes from the saved copy.
 offlineCacheListenerMiddleware.startListening({
-  matcher: conversationActions.fetchConversation.rejected,
+  actionCreator: conversationActions.fetchConversation.rejected,
   effect: (action, listenerApi) => {
-    const conversationId = action.meta.arg as number;
+    const conversationId = action.meta.arg;
     const state = listenerApi.getState() as RootState;
     if (state.conversations.entities[conversationId]) return;
     const cached = selectOfflineConversation(state, conversationId, Date.now());

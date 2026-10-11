@@ -1,6 +1,16 @@
+import i18n from '@/i18n';
 import { errorMessage } from '@/utils/errorUtils';
 
 describe('#errorMessage', () => {
+  // The app opens in French; these checks use the English fallback text.
+  const appLocale = i18n.locale;
+  beforeAll(() => {
+    i18n.locale = 'en';
+  });
+  afterAll(() => {
+    i18n.locale = appLocale;
+  });
+
   it('returns the message of an Error', () => {
     expect(errorMessage(new Error('No app associated with this mime type'))).toBe(
       'No app associated with this mime type',

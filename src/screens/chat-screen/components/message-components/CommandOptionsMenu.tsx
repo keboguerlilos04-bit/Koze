@@ -14,6 +14,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAppDispatch, useAppSelector } from '@/hooks';
 import { updateAttachments } from '@/store/conversation/sendMessageSlice';
 import { catalogActions } from '@/store/catalog/catalogActions';
+import type { AppDispatch } from '@/store';
 import { useChatWindowContext, useRefsContext } from '@/context';
 import {
   AttachFileIcon,
@@ -182,7 +183,7 @@ const ADD_MENU_OPTIONS = [
     id: 'catalog',
     icon: <GridIcon stroke="black" />,
     titleKey: 'CATALOG.TITLE',
-    handlePress: dispatch => {
+    handlePress: (dispatch: AppDispatch) => {
       // Refresh the phone's copy in the background; the sheet shows what is already there.
       dispatch(catalogActions.sync());
     },
