@@ -639,7 +639,7 @@
   },
   "ERRORS": {
     "COMMON_ERROR": "Impossible de joindre le serveur Koze. Réessayez plus tard.",
-    "OfFLINE": "Vous devez vous connecter au Wi-Fi ou à un réseau cellulaire pour vous reconnecter",
+    "OfFLINE": "Hors ligne",
     "CANNOT_FETCH": "Une erreur s'est produite lors de la récupération des informations, veuillez réessayer",
     "AUTH": "Nom d'utilisateur / mot de passe incorrect. Veuillez réessayer",
     "NO_ACCOUNTS_MESSAGE": "Vous n'avez accès a aucun compte chatwoot",
@@ -756,7 +756,10 @@
     "IMAGE_PREVIEW_FAILED": "Impossible de charger l'image depuis l'URL",
     "DOCUMENT_NAME": "Nom du document",
     "DOCUMENT_NAME_PLACEHOLDER": "Nom du fichier (facultatif)",
-    "BUTTON_PARAMETERS": "Paramètres des boutons"
+    "BUTTON_PARAMETERS": "Paramètres des boutons",
+    "VARIABLES": "Variables",
+    "IMAGE_URL_PLACEHOLDER": "https://...",
+    "MEDIA_URL_PLACEHOLDER": "https://..."
   },
   "SEARCH": {
     "PLACEHOLDER": "Tapez au moins 2 caractères pour rechercher",

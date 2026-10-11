@@ -1,4 +1,4 @@
-import { createSlice, createEntityAdapter } from '@reduxjs/toolkit';
+import { createSlice, createEntityAdapter, PayloadAction } from '@reduxjs/toolkit';
 import { Conversation } from '@/types/Conversation';
 import { conversationActions } from './conversationActions';
 import { findPendingMessageIndex } from '@/utils/conversationUtils';
@@ -119,6 +119,13 @@ const conversationSlice = createSlice({
   initialState,
   reducers: {
     clearAllConversations: conversationAdapter.removeAll,
+    // Koze: puts back conversations saved on the phone when the server cannot be reached.
+    restoreConversations: (state, action: PayloadAction<Conversation[]>) => {
+      conversationAdapter.upsertMany(state, action.payload);
+      state.isLoadingConversations = false;
+      state.isAllConversationsFetched = true;
+      state.error = null;
+    },
     addConversation: (state, action) => {
       const conversation = action.payload;
       conversationAdapter.addOne(state, conversation);
@@ -361,6 +368,7 @@ const conversationSlice = createSlice({
 
 export const {
   clearAllConversations,
+  restoreConversations,
   updateConversation,
   updateConversationLastActivity,
   addOrUpdateMessage,

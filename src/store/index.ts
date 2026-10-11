@@ -13,6 +13,7 @@ import {
 import { appReducer } from '@/store/reducers';
 import { setStore } from './storeAccessor';
 import { contactListenerMiddleware } from './contact/contactListener';
+import { offlineCacheListenerMiddleware } from './offline/offlineCacheListener';
 import { KOZE_SERVER_HOST, KOZE_INSTALLATION_URL, KOZE_WEB_SOCKET_URL } from '@/constants/url';
 
 // Disable this in testing environment
@@ -26,8 +27,9 @@ const persistConfig = {
   key: 'Root',
   version: CURRENT_VERSION,
   storage: AsyncStorage,
-  // Koze: live team statuses are only meaningful while connected.
-  blacklist: ['teamPresence'],
+  // Koze: live team statuses are only meaningful while connected; the offline copy of
+  // conversations is persisted separately (see reducers.ts).
+  blacklist: ['teamPresence', 'offlineCache'],
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   migrate: async (state: any) => {
     // If the stored version is older or doesn't exist, return initial state
@@ -53,12 +55,21 @@ const persistConfig = {
   },
 };
 
-const middlewares: Middleware[] = [contactListenerMiddleware.middleware];
+const middlewares: Middleware[] = [
+  contactListenerMiddleware.middleware,
+  offlineCacheListenerMiddleware.middleware,
+];
 
 const rootReducer = (state: ReturnType<typeof appReducer>, action: AnyAction) => {
   if (action.type === 'auth/logout') {
     const initialState = appReducer(undefined, { type: 'INIT' });
-    return { ...initialState, settings: state.settings };
+    return {
+      ...initialState,
+      settings: state.settings,
+      // Koze: the offline copy of conversations is emptied too; keeping its persist marker
+      // lets the emptied copy be written over the saved one.
+      offlineCache: { ...initialState.offlineCache, _persist: state.offlineCache?._persist },
+    } as ReturnType<typeof appReducer>;
   }
   return appReducer(state, action);
 };

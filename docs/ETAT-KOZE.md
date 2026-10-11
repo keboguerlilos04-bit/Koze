@@ -12,6 +12,7 @@ L'application sait déjà gérer les conversations d'une entreprise. Pour foncti
 
 | Date | Travail | Détail |
 | --- | --- | --- |
+| 11 oct. | Consultation hors ligne | Les conversations chargées restent sur le téléphone 2 h (50 conversations, 30 derniers messages chacune) ; sans internet ou si le serveur est éteint, la liste et les conversations s'ouvrent quand même ; effacées à la déconnexion |
 | 11 oct. | Français par défaut | L'application s'ouvre en français (≈ 175 textes traduits en plus) ; un utilisateur qui a déjà choisi une langue la garde |
 | 11 oct. | Photo de profil | Chaque agent et administrateur choisit, prend ou supprime sa photo dans les Réglages ; photo réduite à 512 px avant l'envoi |
 | 11 oct. | Catalogue de produits | Les administrateurs créent les produits (nom, prix, devise, description, stock, photo) ; chaque téléphone garde sa copie et ne télécharge une photo qu'une fois ; les agents envoient un produit depuis le menu « + » d'une conversation |

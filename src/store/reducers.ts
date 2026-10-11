@@ -30,6 +30,9 @@ import searchSlice from '@/store/search/searchSlice';
 import copilotSlice from '@/store/copilot/copilotSlice';
 import teamPresenceSlice from '@/store/team-presence/teamPresenceSlice';
 import catalogSlice from '@/store/catalog/catalogSlice';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { persistReducer } from 'redux-persist';
+import offlineCacheSlice from '@/store/offline/offlineCacheSlice';
 
 export const appReducer = combineReducers({
   auth: authSlice,
@@ -61,4 +64,6 @@ export const appReducer = combineReducers({
   copilot: copilotSlice,
   teamPresence: teamPresenceSlice,
   catalog: catalogSlice,
+  // Koze: saved under its own key so it never makes the main saved state too large to read.
+  offlineCache: persistReducer({ key: 'offlineCache', storage: AsyncStorage }, offlineCacheSlice),
 });

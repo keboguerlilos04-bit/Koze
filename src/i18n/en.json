@@ -684,7 +684,7 @@
   "ERRORS": {
     "COMMON_ERROR": "Could not connect to Koze Server, Please try again later",
     "UNABLE_TO_OPEN_LINK": "Could not open this link",
-    "OfFLINE": "You must connect to Wi-fi or a cellular network to get online again",
+    "OfFLINE": "Offline",
     "CANNOT_FETCH": "There was an error fetching the information, please try again",
     "AUTH": "Username / Password Incorrect. Please try again",
     "NO_ACCOUNTS_MESSAGE": "You don't have access to any chatwoot accounts",
