@@ -12,6 +12,7 @@ L'application sait déjà gérer les conversations d'une entreprise. Pour foncti
 
 | Date | Travail | Détail |
 | --- | --- | --- |
+| 12 oct. | APK pour le serveur AWS | Build `preview` 2e0e9cea (commit 1af3a8e), connecté à https://3-150-222-58.sslip.io : https://expo.dev/artifacts/eas/zdpTz6RB3HPUqA9J0tr0vuQoVOXZVxu_tnkDyOQaV_4.apk ; les APK précédents visent encore ngrok. La base du serveur AWS est neuve : les comptes créés sur le PC n'y existent pas et sont à recréer |
 | 11 oct. | Serveur en ligne | Serveur Koze sur AWS (EC2 m7i-flex.large, 8 Go, IP fixe 3.150.222.58), HTTPS par Caddy sur https://3-150-222-58.sslip.io ; installé par `server/vps-setup.sh` ; l'APK `preview` s'y connecte ; plus besoin de ngrok ni du PC |
 | 11 oct. | Consultation hors ligne | Les conversations chargées restent sur le téléphone 2 h (50 conversations, 30 derniers messages chacune) ; sans internet ou si le serveur est éteint, la liste et les conversations s'ouvrent quand même ; effacées à la déconnexion |
 | 11 oct. | Français par défaut | L'application s'ouvre en français (≈ 175 textes traduits en plus) ; un utilisateur qui a déjà choisi une langue la garde |
@@ -97,7 +98,7 @@ Expo EAS compile l'APK dans le cloud.
 ## Prochaines étapes
 
 1. **Configurer SMTP avec Brevo** (reporté ; confirmation automatique en attendant).
-2. **Installer le nouvel APK** et tester : inscription, déconnexion, reconnexion, messages.
+2. **Installer l'APK du 12 oct.** (désinstaller l'ancien), recréer les comptes, puis tester : inscription, déconnexion, reconnexion, messages.
 3. **Créer une boîte de réception de test** (widget de site web).
 4. **Redémarrer le serveur** (`docker compose up -d --force-recreate rails sidekiq`) pour activer le catalogue, puis tester photo de profil et catalogue sur téléphone.
 5. **Configurer Firebase** pour les notifications push.
