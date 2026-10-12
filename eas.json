@@ -15,7 +15,9 @@
         "buildType": "apk"
       },
       "env": {
-        "SENTRY_DISABLE_AUTO_UPLOAD": "true"
+        "SENTRY_DISABLE_AUTO_UPLOAD": "true",
+        // Koze server on the AWS VPS (server/vps-setup.sh), instead of ngrok on the PC.
+        "EXPO_PUBLIC_KOZE_SERVER_HOST": "3-150-222-58.sslip.io"
       }
     },
     "production": {
